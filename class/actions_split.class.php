@@ -1,5 +1,5 @@
 <?php
-class ActionsMymodule
+class ActionsSplit
 { 
      /** Overloading the doActions function : replacing the parent's function with the one below 
       *  @param      parameters  meta datas of the hook (context, etc...) 
@@ -10,47 +10,43 @@ class ActionsMymodule
       
     function formObjectOptions($parameters, &$object, &$action, $hookmanager) 
     {  
-      	global $langs,$db;
+      	global $langs,$db,$user, $conf;
 		
-		if (in_array('ordercard',explode(':',$parameters['context']))) 
-        {
-        	
+		$langs->load('split@split');
+		
+		$contexts = explode(':',$parameters['context']);
+		
+		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+        		
+        	if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
+			
+			
+				if($object->element=='facture')$idvar = 'facid';
+				else $idvar='id';
+				
+				
+				if($action=='split') {
+					
+					// Todo parse line and change propal id (direct sql ?) 
+					
+				}
+				
+				    	
+				?><script type="text/javascript">
+					$(document).ready(function() {
+						
+						$('div.fiche div.tabsAction').append('<div class="inline-block divButAction"><a id="split_it" href="javascript:;" class="butAction"><?php echo  $langs->trans('SplitIt' )?></a></div>');
+
+						$('#split_it').click(function() {
+							
+							
+						});	
+						
+					});
+					
+				</script><?php
+			}
 		}
-		
-		return 0;
-	}
-     
-    function formEditProductOptions($parameters, &$object, &$action, $hookmanager) 
-    {
-		
-    	if (in_array('invoicecard',explode(':',$parameters['context'])))
-        {
-        	
-        }
-		
-        return 0;
-    }
-
-	function formAddObjectLine ($parameters, &$object, &$action, $hookmanager) {
-		
-		global $db;
-		
-		if (in_array('ordercard',explode(':',$parameters['context'])) || in_array('invoicecard',explode(':',$parameters['context']))) 
-        {
-        	
-        }
-
-		return 0;
-	}
-
-	function printObjectLine ($parameters, &$object, &$action, $hookmanager){
-		
-		global $db;
-		
-		if (in_array('ordercard',explode(':',$parameters['context'])) || in_array('invoicecard',explode(':',$parameters['context']))) 
-        {
-        	
-        }
 
 		return 0;
 	}
