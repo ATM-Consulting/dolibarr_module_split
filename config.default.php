@@ -27,5 +27,7 @@
 		exit;
 	}
 
+
+	dol_include_once('/comm/propal/class/propal.class.php');
 	
 
