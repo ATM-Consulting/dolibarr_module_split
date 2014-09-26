@@ -46,12 +46,15 @@ class ActionsSplit
 								
 								$('#pop-split').dialog({
 									title:'<?php echo $langs->trans('SplitThisDocument') ?>'
-									,width:'90%'
+									,width:'80%'
+									,modal: true
 									,buttons: [ 
 										{ text: "<?php echo $langs->trans('Split'); ?>", click: function() { 
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
+													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id,1) ?>";
+														
 												});
 												
 												$( this ).dialog( "close" );

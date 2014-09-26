@@ -29,19 +29,49 @@
 	</tr>
 	<?php
 	
+	$class='';
+	
 	foreach($object->lines as $line) {
 		
-		$prod=new Product($db);
-		$prod->fetch($line->fk_product);
+		if($line->fk_product>0) {
+			$prod=new Product($db);
+			$prod->fetch($line->fk_product);
+				
+			$label = $prod->getNomUrl(1).' - '.$prod->label;
+			if($line->desc) $label.=' - '.$line->desc	;
+		}
+		else{
+			$label = $line->desc;
+		}
 		
-		?>
-		<tr>
-			<td><?php echo $prod->getNomUrl(1).' '.$line->desc ?></td>
-			<td><?php echo $line->qty ?></td>
-			<td><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
-			<td><input type="checkbox" name="TMoveLine[<?php echo $line->id ?>]" value="1" /></td>
-		</tr>
-		<?php
+		$lineid = empty($line->id) ? $line->rowid : $line->id;
+		
+		$class=($class=='impair') ? 'pair':'impair';
+		
+		if($line->product_type==9) {
+			?>
+			<tr class="<?php echo $class; ?>">
+				<td colspan="6" style="font-weight: bold;"><?php echo $label ?></td>
+				<td><input type="checkbox" name="TMoveLine[<?php echo $line->id ?>]" value="1" /></td>
+			</tr>
+			<?php
+			
+		}
+		else{
+			?>
+			<tr class="<?php echo $class; ?>">
+				<td><?php echo $label ?></td>
+				<td align="center"><?php echo round($line->tva_tx,2) ?>%</td>
+				<td align="right"><?php echo price($line->subprice,0,'',1,-1,-1,$conf->currency); ?></td>
+				<td align="center"><?php echo $line->qty ?></td>
+				<td align="center"><?php echo round($line->remise_percent,2) ?>%</td>
+				<td align="right"><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
+				<td><input type="checkbox" name="TMoveLine[<?php echo $lineid ?>]" value="1" /></td>
+			</tr>
+			<?php
+			
+		}
+		
 		
 		
 	}
