@@ -12,25 +12,41 @@
 	
 	$id_new = $object->createFromClone();
 	
-	$new_object = new $element($db);
-	$new_object->fetch($id_new);
-	
 	$old_object = new $element($db);
 	$old_object->fetch(GETPOST('id'));
 	
+	$new_object = new $element($db);
+	$new_object->fetch($id_new);
 	
-
+	/*foreach ($TMoveLine as $lineid => $dummy) {
+			if($element=='propal') {
+				$line = new PropaleLigne;
+				$line->fetch($lineid);
+				
+				$line->fk_propal = $id_new;
+				$line->insert();
+				
+				$line = new PropaleLigne;
+				$line->fetch($lineid);
+				$line->delete();			
+			}
+	}*/
 	
+	
+	foreach($new_object->lines as $line) {
+                 
+         $lineid = empty($line->id) ? $line->rowid : $line->id;
+         
+         if(!isset($TMoveLine[$lineid])) {
+                 $new_object->deleteline($lineid, $user);
+         }
+    }       
+		
 	foreach($old_object->lines as $line) {
-		
-		$lineid = empty($line->id) ? $line->rowid : $line->id;
-		
-		if(isset($TMoveLine[$lineid])) {
-			$old_object->deleteline($lineid, $user);
-			
-			if($element=='propal') $new_object->addline($line->desc, $line->subprice,$line->qty,0,0,0,0,0,'HT',0,0,$line->product_type,-1);
-		
-		}
-		
-	}	
-	
+                 
+         $lineid = empty($line->id) ? $line->rowid : $line->id;
+         
+         if(isset($TMoveLine[$lineid])) {
+                 $old_object->deleteline($lineid, $user);
+         }
+    }       
