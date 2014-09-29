@@ -51,7 +51,7 @@ class modsplit extends DolibarrModules
 
         // Family can be 'crm','financial','hr','projects','products','ecm','technic','other'
         // It is used to group modules in module setup page
-        $this->family = "ATM";
+        $this->family = "financial";
         // Module label (no space allowed)
         // used if translation string 'ModuleXXXName' not found
         // (where XXX is value of numeric property 'numero' of module)
@@ -61,7 +61,7 @@ class modsplit extends DolibarrModules
         // (where XXX is value of numeric property 'numero' of module)
         $this->description = "Description of module split";
         // Possible values for version are: 'development', 'experimental' or version
-        $this->version = '0.1';
+        $this->version = '1.0';
         // Key used in llx_const table to save module status enabled/disabled
         // (where MYMODULE is value of property name of module in uppercase)
         $this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -73,7 +73,7 @@ class modsplit extends DolibarrModules
         // use this->picto='pictovalue'
         // If file is in module/img directory under name object_pictovalue.png
         // use this->picto='pictovalue@module'
-        $this->picto = 'split@split'; // mypicto@split
+        $this->picto = 'icon16.png@split'; // mypicto@split
         // Defined all module parts (triggers, login, substitutions, menus, css, etc...)
         // for default path (eg: /split/core/xxxxx) (0=disable, 1=enable)
         // for specific path of parts (eg: /split/core/modules/barcode)
@@ -105,7 +105,7 @@ class modsplit extends DolibarrModules
 
         // Config pages. Put here list of php pages
         // stored into split/admin directory, used to setup module.
-        $this->config_page_url = array("split_setup.php@split");
+        //$this->config_page_url = array("split_setup.php@split");
 
         // Dependencies
         // List of modules id that must be enabled if this module is enabled
