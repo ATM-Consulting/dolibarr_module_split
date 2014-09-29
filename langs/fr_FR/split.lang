@@ -1,2 +1,7 @@
-ModuleXXXXXXName = Name
-ModuleXXXXXXDesc = Descripion
+Module104430Name = Split propale
+Module104430Desc = permet de séparer en 2 une proposition dont une partie aurait été acceptée et l'autre reste en suspend.
+SplitIt=Couper en 2
+SplitThisDocument=Séparer les lignes de ce document 
+SimplyDelete=Simplement supprimer les lignes
+SplitOk=La séparation des lignes est faite
+SplitDeleteOk=La suppression des lignes est faite

@@ -17,6 +17,15 @@ class ActionsSplit
 		$contexts = explode(':',$parameters['context']);
 		
 		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
+				
+			if(GETPOST('actionSplitDelete') == 'ok') {
+				setEventMessage($langs->trans('SplitDeleteOk'));
+			}
+			else if(GETPOST('actionSplit') == 'ok') {
+				setEventMessage($langs->trans('SplitOk'));
+			}
+			
+
         		
         	if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 			
@@ -49,11 +58,13 @@ class ActionsSplit
 									,width:'80%'
 									,modal: true
 									,buttons: [ 
-										{ text: "<?php echo $langs->trans('Split'); ?>", click: function() { 
+										{ text: "<?php echo $langs->trans('SimplyDelete'); ?>", click: function() { 
+												
+												$('#splitform input[name=action]').val('delete');
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id,1) ?>";
+													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
 														
 												});
 												
@@ -62,6 +73,21 @@ class ActionsSplit
 												 
 											} 
 										} 
+										
+										,{ text: "<?php echo $langs->trans('SplitIt'); ?>", click: function() { 
+												
+												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
+													
+													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplit=ok',1) ?>";
+														
+												});
+												
+												$( this ).dialog( "close" );
+														
+												 
+											} 
+										}
+										
 									]
 								});
 							});

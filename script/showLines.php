@@ -31,7 +31,7 @@
 	
 	$class='';
 	
-	foreach($object->lines as $line) {
+	foreach($object->lines as $k=>$line) {
 		
 		if($line->fk_product>0) {
 			$prod=new Product($db);
@@ -52,7 +52,7 @@
 			?>
 			<tr class="<?php echo $class; ?>">
 				<td colspan="6" style="font-weight: bold;"><?php echo $label ?></td>
-				<td><input type="checkbox" name="TMoveLine[<?php echo $line->id ?>]" value="1" /></td>
+				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" /></td>
 			</tr>
 			<?php
 			
@@ -66,7 +66,7 @@
 				<td align="center"><?php echo $line->qty ?></td>
 				<td align="center"><?php echo round($line->remise_percent,2) ?>%</td>
 				<td align="right"><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
-				<td><input type="checkbox" name="TMoveLine[<?php echo $lineid ?>]" value="1" /></td>
+				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" /></td>
 			</tr>
 			<?php
 			

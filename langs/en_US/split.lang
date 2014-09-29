@@ -1,2 +1,7 @@
-ModuleXXXXXXName = Name
-ModuleXXXXXXDesc = Descripion
+Module104430Name = Split proposal
+Module104430Desc = Allow you to split line from a proposal to another.
+SplitIt=Split it
+SplitThisDocument=Split lines of this document 
+SimplyDelete=Simply delete lines
+SplitOk=Split ok
+SplitDeleteOk=Delete lines ok
