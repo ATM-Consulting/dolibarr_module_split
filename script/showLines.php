@@ -23,7 +23,7 @@
 	echo $langs->trans("SelectThirdParty");
 	
 	$form=new Form($db);
-	echo $form->select_company($object->fk_soc, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)')
+	echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)')
 	
 	?>	
 	<table width="100%">
