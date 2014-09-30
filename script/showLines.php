@@ -2,9 +2,12 @@
 
 	require('../config.php');
 	
+	dol_include_once('/core/class/html.form.class.php');
+	
 	$element = GETPOST('element');
 	$id = GETPOST('id');
 	
+	$langs->load('companies');
 	
 	$object = new $element($db);
 	
@@ -15,7 +18,14 @@
 		<input type="hidden" name="element" value="<?php echo $element ?>" />
 		<input type="hidden" name="id" value="<?php echo $id ?>" />
 		<input type="hidden" name="action" value="split" />
-		
+	<?php
+	
+	echo $langs->trans("SelectThirdParty");
+	
+	$form=new Form($db);
+	echo $form->select_company(GETPOST('socid', 'int'), 'socid', '(s.client=1 OR s.client=2 OR s.client=3)')
+	
+	?>	
 	<table width="100%">
 	<tr class="liste_titre nodrag nodrop">
 		<td>Description</td>

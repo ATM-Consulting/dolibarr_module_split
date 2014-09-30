@@ -15,8 +15,8 @@
 	$old_object = new $element($db);
 	$old_object->fetch(GETPOST('id'));
 	
-	if($action == 'split') {
-		$id_new = $object->createFromClone();
+	if($action == 'split' || $action=='copy') {
+		$id_new = $object->createFromClone((int)GETPOST('socid'));
 	//	print "création $id_new<br>";
 		$new_object = new $element($db);
 		$new_object->fetch($id_new);

@@ -3,5 +3,7 @@ Module104430Desc = permet de séparer en 2 une proposition dont une partie aurai
 SplitIt=Couper en 2
 SplitThisDocument=Séparer les lignes de ce document 
 SimplyDelete=Simplement supprimer les lignes
+SimplyCopy=Simplement copier les lignes
 SplitOk=La séparation des lignes est faite
 SplitDeleteOk=La suppression des lignes est faite
+SplitCopyOk=La copie des lignes est faites

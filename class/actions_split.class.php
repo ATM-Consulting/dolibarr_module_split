@@ -24,8 +24,10 @@ class ActionsSplit
 			else if(GETPOST('actionSplit') == 'ok') {
 				setEventMessage($langs->trans('SplitOk'));
 			}
+			else if(GETPOST('actionSplitCopy') == 'ok') {
+				setEventMessage($langs->trans('SplitCopyOk'));
+			}
 			
-
         		
         	if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
 			
@@ -33,14 +35,7 @@ class ActionsSplit
 				if($object->element=='facture')$idvar = 'facid';
 				else $idvar='id';
 				
-				
-				if($action=='split') {
-					
-					// Todo parse line and change propal id (direct sql ?) 
-					
-				}
-				
-				    	
+					    	
 				?><script type="text/javascript">
 					$(document).ready(function() {
 						
@@ -65,6 +60,21 @@ class ActionsSplit
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
 													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
+														
+												});
+												
+												$( this ).dialog( "close" );
+														
+												 
+											} 
+										}
+										,{ text: "<?php echo $langs->trans('SimplyCopy'); ?>", click: function() { 
+												
+												$('#splitform input[name=action]').val('copy');
+												
+												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
+													
+													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplitCopy=ok',1) ?>";
 														
 												});
 												
