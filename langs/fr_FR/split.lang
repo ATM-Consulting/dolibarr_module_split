@@ -1,9 +1,10 @@
 Module104430Name = Split propale
-Module104430Desc = permet de séparer en 2 une proposition dont une partie aurait été acceptée et l'autre reste en suspend.
-SplitIt=Couper en 2
+Module104430Desc = Permet de découper une proposition commerciale en deux
+SplitIt=Découper
 SplitThisDocument=Séparer les lignes de ce document 
-SimplyDelete=Simplement supprimer les lignes
-SimplyCopy=Simplement copier les lignes
-SplitOk=La séparation des lignes est faite
-SplitDeleteOk=La suppression des lignes est faite
-SplitCopyOk=La copie des lignes est faites
+SimplyDelete=Supprimer les lignes de la proposition %
+SimplyCopy=Copier les lignes dans une nouvelle proposition
+SplitOk=Les lignes sélectionnées ont été déplacées dans une nouvelle proposition
+SplitDeleteOk=Les lignes sélectionnées ont été supprimées de la proposition
+SplitCopyOk=Les lignes sélectionnées ont été copiées dans une nouvelle proposition
+MoveThisLines=Sel.

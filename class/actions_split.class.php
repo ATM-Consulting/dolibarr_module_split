@@ -53,7 +53,7 @@ class ActionsSplit
 									,width:'80%'
 									,modal: true
 									,buttons: [ 
-										{ text: "<?php echo $langs->trans('SimplyDelete'); ?>", click: function() { 
+										{ text: "<?php echo $langs->transnoentities('SimplyDelete'); ?>", click: function() { 
 												
 												$('#splitform input[name=action]').val('delete');
 												
@@ -68,7 +68,7 @@ class ActionsSplit
 												 
 											} 
 										}
-										,{ text: "<?php echo $langs->trans('SimplyCopy'); ?>", click: function() { 
+										,{ text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>", click: function() { 
 												
 												$('#splitform input[name=action]').val('copy');
 												
@@ -84,7 +84,7 @@ class ActionsSplit
 											} 
 										} 
 										
-										,{ text: "<?php echo $langs->trans('SplitIt'); ?>", click: function() { 
+										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", click: function() { 
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													

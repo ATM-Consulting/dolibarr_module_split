@@ -7,6 +7,7 @@
 	$element = GETPOST('element');
 	$id = GETPOST('id');
 	
+	$langs->load('split@split');
 	$langs->load('companies');
 	
 	$object = new $element($db);
@@ -25,16 +26,17 @@
 	$form=new Form($db);
 	echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)')
 	
-	?>	
-	<table width="100%">
+	?>
+	<br><br>
+	<table width="100%" class="noborder">
 	<tr class="liste_titre nodrag nodrop">
 		<td>Description</td>
 		<td align="right" width="50">TVA</td>
 		<td align="right" width="80">P.U. HT</td>
 		<td align="right" width="50">Qté</td>
 		<td align="right" width="50">Réduc.</td>
-		<td align="right" width="50">Total HT</td>
-		<td align="right" width="50">MoveThisLines</td>
+		<td align="right" width="80">Total HT</td>
+		<td align="center" width="50"><?php echo $langs->trans('MoveThisLines') ?></td>
 		
 	</tr>
 	<?php
@@ -47,12 +49,14 @@
 			$prod=new Product($db);
 			$prod->fetch($line->fk_product);
 				
-			$label = $prod->getNomUrl(1).' - '.$prod->label;
-			if($line->desc) $label.=' - '.$line->desc	;
+			$text = $prod->getNomUrl(1).' - '.$prod->label;
+			$desc = dol_htmlentitiesbr($line->desc);
+			$label = $form->textwithtooltip($text,$desc,3);
 		}
 		else{
 			$label = $line->desc;
 		}
+		
 		
 		$lineid = empty($line->id) ? $line->rowid : $line->id;
 		
@@ -71,10 +75,10 @@
 			?>
 			<tr class="<?php echo $class; ?>">
 				<td><?php echo $label ?></td>
-				<td align="center"><?php echo round($line->tva_tx,2) ?>%</td>
+				<td align="right"><?php echo round($line->tva_tx,2) ?>%</td>
 				<td align="right"><?php echo price($line->subprice,0,'',1,-1,-1,$conf->currency); ?></td>
-				<td align="center"><?php echo $line->qty ?></td>
-				<td align="center"><?php echo round($line->remise_percent,2) ?>%</td>
+				<td align="right"><?php echo $line->qty ?></td>
+				<td align="right"><?php echo round($line->remise_percent,2) ?>%</td>
 				<td align="right"><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
 				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" /></td>
 			</tr>
