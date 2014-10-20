@@ -437,8 +437,8 @@ class modsplit extends DolibarrModules
 
         $result = $this->loadTables();
 
-        $url = dol_buildpath('/split/script/create-maj-base.php', 2);
-        file_get_contents($url);
+        //$url = dol_buildpath('/split/script/create-maj-base.php', 2);
+        //file_get_contents($url);
 
         return $this->_init($sql, $options);
     }
