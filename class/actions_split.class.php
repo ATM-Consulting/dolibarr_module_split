@@ -49,7 +49,7 @@ class ActionsSplit
 								$('#pop-split').html(data)
 								
 								$('#pop-split').dialog({
-									title:'<?php echo $langs->trans('SplitThisDocument') ?>'
+									title:'<?php echo $langs->transnoentities('SplitThisDocument') ?>'
 									,width:'80%'
 									,modal: true
 									,buttons: [ 
