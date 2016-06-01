@@ -15,6 +15,9 @@
 	$old_object = new $element($db);
 	$old_object->fetch(GETPOST('id'));
 	
+	$entity = GETPOST('split_entity');
+	if(empty($entity))$entity=$conf->entity;
+	
 	if($action == 'split' || $action=='copy') {
 		$id_new = $object->createFromClone((int)GETPOST('socid'));
 	//	print "création $id_new<br>";
@@ -34,6 +37,13 @@
 		//	 	print "ok $k $lineid<br>";
 			 }
 	    }       		
+		
+		if($entity!=$conf->entity) {
+			
+			$db->query("UPDATE ".MAIN_DB_PREFIX.$new_object->table_element." SET entity=".$entity." WHERE rowid=".$new_object->id );
+			
+		}
+		
 	}
 	
 	

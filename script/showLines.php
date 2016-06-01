@@ -24,8 +24,13 @@
 	echo $langs->trans("SelectThirdParty");
 	
 	$form=new Form($db);
-	echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)')
+	echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)');
 	
+	
+	if(!empty($mc)) {
+		echo ' - '. $langs->trans('EntityTo').' : '. $mc->select_entities($conf->entity, 'split_entity');	
+	}
+			
 	?>
 	<br><br>
 	<table width="100%" class="noborder">

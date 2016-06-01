@@ -10,14 +10,14 @@ class ActionsSplit
       
     function formObjectOptions($parameters, &$object, &$action, $hookmanager) 
     {  
-      	global $langs,$db,$user, $conf;
+      	global $langs,$db,$user, $conf, $mc;
 		
 		$langs->load('split@split');
 		
 		$contexts = explode(':',$parameters['context']);
 		
 		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
-				
+			
 			if(GETPOST('actionSplitDelete') == 'ok') {
 				setEventMessage($langs->trans('SplitDeleteOk'));
 			}
@@ -35,6 +35,8 @@ class ActionsSplit
 				if($object->element=='facture')$idvar = 'facid';
 				else $idvar='id';
 				
+				if((float)DOL_VERSION >= 3.8) $fiche = 'propal/card.php';
+				else $fiche = 'propal.php';
 					    	
 				?><script type="text/javascript">
 					$(document).ready(function() {
@@ -59,7 +61,7 @@ class ActionsSplit
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
+													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
 														
 												});
 												
@@ -74,7 +76,7 @@ class ActionsSplit
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplitCopy=ok',1) ?>";
+													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitCopy=ok',1) ?>";
 														
 												});
 												
@@ -88,7 +90,7 @@ class ActionsSplit
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/propal.php?id='.$object->id.'&actionSplit=ok',1) ?>";
+													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplit=ok',1) ?>";
 														
 												});
 												
