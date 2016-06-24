@@ -35,7 +35,7 @@ class ActionsSplit
 				if($object->element=='facture')$idvar = 'facid';
 				else $idvar='id';
 				
-				if((float)DOL_VERSION >= 3.8) $fiche = 'propal/card.php';
+				if((float)DOL_VERSION >= 4.0) $fiche = 'propal/card.php';
 				else $fiche = 'propal.php';
 					    	
 				?><script type="text/javascript">
