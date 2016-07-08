@@ -19,6 +19,7 @@
 		<input type="hidden" name="element" value="<?php echo $element ?>" />
 		<input type="hidden" name="id" value="<?php echo $id ?>" />
 		<input type="hidden" name="action" value="split" />
+		<input type="hidden" name="modulefrom" value="splitpropal" />
 	<?php
 	
 	echo $langs->trans("SelectThirdParty");
