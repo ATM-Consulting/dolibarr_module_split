@@ -60,7 +60,7 @@
 			$label = $form->textwithtooltip($text,$desc,3);
 		}
 		else{
-			$label = $line->desc;
+			$label = !empty($line->desc) ? $line->desc : $line->label;
 		}
 		
 		
