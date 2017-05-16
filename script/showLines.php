@@ -2,7 +2,8 @@
 
 	require('../config.php');
 	
-	dol_include_once('/core/class/html.form.class.php');
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+	dol_include_once('/split/lib/split.lib.php');
 	
 	$element = GETPOST('element');
 	$id = GETPOST('id');
@@ -31,6 +32,8 @@
 	if(!empty($mc)) {
 		echo ' - '. $langs->trans('EntityTo').' : '. $mc->select_entities($conf->entity, 'split_entity');	
 	}
+	
+	echo ' - <b>'.$langs->trans('Or').'</b> - '. $langs->trans('PropalTarget').' : '.getHtmlSelectPropals($conf->entity, array($object->id));
 			
 	?>
 	<br><br>
