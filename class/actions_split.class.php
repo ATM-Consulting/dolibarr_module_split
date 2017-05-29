@@ -70,7 +70,7 @@ class ActionsSplit
 												 
 											} 
 										}
-										,{ text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>", click: function() { 
+										,{ text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>", title: "<?php echo $langs->transnoentities('SimplyCopyTitle'); ?>", click: function() { 
 												
 												$('#splitform input[name=action]').val('copy');
 												
@@ -86,7 +86,7 @@ class ActionsSplit
 											} 
 										} 
 										
-										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", click: function() { 
+										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", title: "<?php echo $langs->transnoentities('SplitItTitle'); ?>", click: function() { 
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													

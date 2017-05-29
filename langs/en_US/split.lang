@@ -5,3 +5,7 @@ SplitThisDocument=Split lines of this document
 SimplyDelete=Simply delete lines
 SplitOk=Split ok
 SplitDeleteOk=Delete lines ok
+SimplyCopyTitle=If a proposal is selected, then the copy will done into this one
+SplitItTitle=If a proposal is selected, then the move will done into this one
+Or=Or
+PropalTarget=Commercial proposition target
