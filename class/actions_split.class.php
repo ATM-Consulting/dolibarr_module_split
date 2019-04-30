@@ -76,7 +76,7 @@ class ActionsSplit
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitCopy=ok',1) ?>";
+													//document.location.href="<?php //echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitCopy=ok',1) ?>//";
 														
 												});
 												
