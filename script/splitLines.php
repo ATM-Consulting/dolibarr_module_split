@@ -53,7 +53,7 @@
                         $newN->object_type = $element;
                         $newN->fk_object = $newLineId;
 
-                        $newN->setPrice($PDOdb, 1, null, $element, $new_object->id);
+                        $newN->setPrice($PDOdb, $line->qty, null, $element, $new_object->id);
                         $newN->save($PDOdb);
                     }
 
@@ -71,7 +71,7 @@
                     }
 
                     $newN->save($PDOdb);
-                    $newN->setPrice($PDOdb, 1, null, $element, $new_object->id);
+                    $newN->setPrice($PDOdb, $line->qty, null, $element, $new_object->id);
                 }
 			}
 		}
