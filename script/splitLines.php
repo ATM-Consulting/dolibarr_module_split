@@ -77,7 +77,9 @@
 		}
 		else
 		{
-			$id_new = $object->createFromClone((int)GETPOST('socid'));
+		    /** @var Propal $object */
+		    if ((float) DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+			else $id_new = $object->createFromClone((int)GETPOST('socid'));
 		//	print "création $id_new<br>";
 			$new_object = new $element($db);
 			$new_object->fetch($id_new);
