@@ -40,10 +40,12 @@ class ActionsSplit
 					    	
 				?><script type="text/javascript">
 					$(document).ready(function() {
-						
-						$('div.fiche div.tabsAction').append('<div class="inline-block divButAction"><a id="split_it" href="javascript:;" class="butAction"><?php echo  $langs->trans('SplitIt' )?></a></div>');
 
-						$('#split_it').click(function() {
+                        var split_bt = $('<div class="inline-block divButAction"><a id="split_it" href="javascript:;" class="butAction"><?php echo  $langs->trans('SplitIt' )?></a></div>');
+
+                        $('div.fiche div.tabsAction').append(split_bt);
+
+                        split_bt.click(function() {
 							$('#pop-split').remove();
 							$('body').append('<div id="pop-split"></div>');
 							
