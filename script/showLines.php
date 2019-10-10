@@ -75,7 +75,7 @@
 			?>
 			<tr class="<?php echo $class; ?>">
 				<td colspan="6" style="font-weight: bold;"><?php echo $label ?></td>
-				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" /></td>
+				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" checked /></td>
 			</tr>
 			<?php
 			
@@ -89,7 +89,7 @@
 				<td align="right"><?php echo $line->qty ?></td>
 				<td align="right"><?php echo round($line->remise_percent,2) ?>%</td>
 				<td align="right"><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
-				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" /></td>
+				<td align="center"><input type="checkbox" name="TMoveLine[<?php echo $k; ?>]" value="<?php echo $lineid ?>" checked /></td>
 			</tr>
 			<?php
 			
@@ -103,6 +103,5 @@
 	</table>
 	</form>
 	<?php
-	
 	
 	
