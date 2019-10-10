@@ -25,7 +25,42 @@
 		{
 			$new_object = new $element($db);
 			$new_object->fetch($fk_target);
-			
+
+			// copie des coefs de la propal source si la propal de destination en est dépourvu
+			if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
+				dol_include_once('/nomenclature/class/nomenclature.class.php');
+				$PDOdb = new TPDOdb;
+
+				if (!empty($TMoveLine)) // on ne copie les coefs que si y a des lignes à copier...
+				{
+					$coef = new TNomenclatureCoefObject;
+					$TCoef = $coef->loadCoefObject($PDOdb, $old_object, $element, $old_object->id);
+					if (!empty($TCoef))
+					{
+						$sql = 'SELECT rowid FROM '.MAIN_DB_PREFIX.'nomenclature_coef_object
+							WHERE fk_object = '.(int)$new_object->id.'
+							AND type_object = "'.$element.'"';
+
+						$PDOdb->Execute($sql);
+						$TRes = $PDOdb->Get_All();
+
+						if (empty($TRes)) // la nomenclature cible n'a pas de coef, on copie les coef de la source
+						{
+							foreach ($TCoef as $label => $coef)
+							{
+								$coef->fk_object = $new_object->id;
+								$coef->{OBJETSTD_MASTERKEY} = 0; // le champ id est toujours def
+								$coef->{OBJETSTD_DATECREATE}=time(); // ces champs dates aussi
+								$coef->{OBJETSTD_DATEUPDATE}=time();
+//								var_dump($new_object->id, $coef); exit;
+								$coef->save($PDOdb);
+							}
+						}
+					}
+				}
+
+			}
+
 			foreach ($TMoveLine as $k => $line)
 			{
 				$line = $old_object->lines[$k];
@@ -35,55 +70,24 @@
 				$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
 
 				if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
-				    dol_include_once('/nomenclature/class/nomenclature.class.php');
-				    $PDOdb = new TPDOdb;
+				    // nomenclature de la ligne source
                     $n = new TNomenclature;
                     $n->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);
 
-                    $coef = new TNomenclatureCoefObject;
-                    $TCoef = $coef->loadCoefObject($PDOdb, $new_object, $element, $new_object->id);
-                    var_dump($TCoef);
-                    //$n->setPrice($PDOdb, $line->qty, null, $element, $old_object->id);
                     if($n->rowid == 0 && (count($n->TNomenclatureDet) + count($n->TNomenclatureWorkstation)) > 0) {
                         // Le cas d'une nomenclature non chargée : ça ne sert à rien de copier la Nomenclature...
                         continue;
                     }
 
+                    // copie de la nomenclature ligne vers la ligne de destination
                     $newN = new TNomenclature;
                     $newN->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);
 					$newN->reinit();
 					$newN->object_type = $element;
 					$newN->fk_object = $newLineId;
-					//$newN->setPrice($PDOdb, $line->qty, null, $element, $new_object->id);
-					var_dump($n);
-					$newN->save($PDOdb);
-					/*var_dump($newN->rowid == 0 && (count($newN->TNomenclatureDet) + count($newN->TNomenclatureWorkstation)) > 0, $newN->iExist);
-					if($newN->rowid == 0 && (count($newN->TNomenclatureDet) + count($newN->TNomenclatureWorkstation)) > 0) {
-						// Charger une nomenclature en local ça peut aider des fois !
-						if(!$newN->iExist) $newN->reinit();
-						$newN->object_type = $element;
-						$newN->fk_object = $newLineId;
-
-						$newN->setPrice($PDOdb, $line->qty, null, $element, $new_object->id);
-						$newN->save($PDOdb);
-					}
-
-					var_dump($n->TNomenclatureDet);
-					var_dump($newN->TNomenclatureDet);
-					$n->fetchCombinedDetails($PDOdb);
-					/*$newN->fetchCombinedDetails($PDOdb);
-					foreach($n->TNomenclatureDetCombined as $fk_product => $det) {
-						foreach($det as $attr => alue) {
-							if(in_array($attr, array('rowid', 'id', 'date_cre', 'date_maj'))) continue;
-
-							$newN->TNomenclatureDetCombined[$fk_product]->$attr = $value;
-						}
-
-						$newN->TNomenclatureDetCombined[$fk_product]->save($PDOdb);
-					}
 
 					$newN->save($PDOdb);
-					$newN->setPrice($PDOdb, $line->qty, null, $element, $new_object->id);*/
+
                 }
 			}
 		}
