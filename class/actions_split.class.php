@@ -22,10 +22,14 @@ class ActionsSplit
 				setEventMessage($langs->trans('SplitDeleteOk'));
 			}
 			else if(GETPOST('actionSplit') == 'ok') {
-				setEventMessage($langs->trans('SplitOk'));
+			    $url = GETPOST('new_url');
+			    if (!empty($url)) $url = '- '.$url;
+                setEventMessage($langs->trans('SplitOk', $url));
 			}
 			else if(GETPOST('actionSplitCopy') == 'ok') {
-				setEventMessage($langs->trans('SplitCopyOk'));
+                $url = GETPOST('new_url');
+                if (!empty($url)) $url = '- '.$url;
+                setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
 			
         		
@@ -75,12 +79,15 @@ class ActionsSplit
 										,{ text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>", title: "<?php echo $langs->transnoentities('SimplyCopyTitle'); ?>", click: function() { 
 												
 												$('#splitform input[name=action]').val('copy');
-												
-												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
-													
-													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitCopy=ok',1) ?>";
-														
-												});
+
+                                                $.ajax({
+                                                    url: '<?php echo dol_buildpath('/split/script/splitLines.php', 1); ?>'
+                                                    , method: 'POST'
+                                                    , data: $('#splitform').serialize()
+                                                    , dataType: 'html'
+                                                }).done(function (url) {
+                                                    document.location.href = "<?php echo dol_buildpath('/comm/'.$fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + url;
+                                                });
 												
 												$( this ).dialog( "close" );
 														
@@ -88,13 +95,16 @@ class ActionsSplit
 											} 
 										} 
 										
-										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", title: "<?php echo $langs->transnoentities('SplitItTitle'); ?>", click: function() { 
-												
-												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
-													
-													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplit=ok',1) ?>";
-														
-												});
+										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", title: "<?php echo $langs->transnoentities('SplitItTitle'); ?>", click: function() {
+
+                                                $.ajax({
+                                                    url: '<?php echo dol_buildpath('/split/script/splitLines.php', 1); ?>'
+                                                    , method: 'POST'
+                                                    , data: $('#splitform').serialize()
+                                                    , dataType: 'JSON'
+                                                }).done(function (url) {
+                                                    document.location.href = "<?php echo dol_buildpath('/comm/'.$fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
+                                                });
 												
 												$( this ).dialog( "close" );
 														

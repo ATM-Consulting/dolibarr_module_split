@@ -130,8 +130,13 @@
 	         $lineid = empty($line->id) ? $line->rowid : $line->id;
 	         
 	         if(isset($TMoveLine[$k])) {
-	         	print "Suppresion ligne old $lineid";
+//	         	print "Suppresion ligne old $lineid";
 	                 $old_object->deleteline($lineid, $user);
 	         }
 	    }       
 	}
+
+	if ($action !== 'delete' && method_exists($new_object, 'getNomUrl'))
+    {
+        print urlencode($new_object->getNomUrl());
+    }
