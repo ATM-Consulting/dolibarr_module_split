@@ -15,9 +15,9 @@ class ActionsSplit
 		$langs->load('split@split');
 		
 		$contexts = explode(':',$parameters['context']);
-		
-		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)) {
-			
+
+		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)|| in_array('operationordercard',$contexts)) {
+
 			if(GETPOST('actionSplitDelete') == 'ok') {
 				setEventMessage($langs->trans('SplitDeleteOk'));
 			}
@@ -31,16 +31,23 @@ class ActionsSplit
                 if (!empty($url)) $url = '- '.$url;
                 setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
+			if($object->element === 'operationorder') {
+                $status = new Operationorderstatus($db);
+                $res = $status->fetchDefault(0, $this->entity);
+            }
+        	if (($object->statut == 0 || ($conf->operationorder->enabled && $status->code === $object->objStatus->code))
+                && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
 			
-        		
-        	if ($object->statut == 0  && $user->rights->{$object->element}->creer) {
-			
-			
+
 				if($object->element=='facture')$idvar = 'facid';
 				else $idvar='id';
-				
-				if((float)DOL_VERSION >= 4.0) $fiche = 'propal/card.php';
-				else $fiche = 'propal.php';
+                if($object->element == 'propal') {
+                    if((float)DOL_VERSION >= 4.0) $fiche = '/comm/propal/card.php';
+                    else $fiche = '/comm/propal.php';
+                }
+                else if($object->element == 'operationorder'){
+                    $fiche = '/operationorder/operationorder_card.php';
+                }
 					    	
 				?><script type="text/javascript">
 					$(document).ready(function() {
@@ -67,7 +74,7 @@ class ActionsSplit
 												
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
 													
-													document.location.href="<?php echo dol_buildpath('/comm/'.$fiche.'?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
+													document.location.href="<?php echo dol_buildpath($fiche.'?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
 														
 												});
 												
@@ -86,7 +93,7 @@ class ActionsSplit
                                                     , data: $('#splitform').serialize()
                                                     , dataType: 'html'
                                                 }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath('/comm/'.$fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + url;
+                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + url;
                                                 });
 												
 												$( this ).dialog( "close" );
@@ -103,7 +110,7 @@ class ActionsSplit
                                                     , data: $('#splitform').serialize()
                                                     , dataType: 'JSON'
                                                 }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath('/comm/'.$fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
+                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
                                                 });
 												
 												$( this ).dialog( "close" );

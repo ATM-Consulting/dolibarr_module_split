@@ -1,15 +1,16 @@
 <?php
 
 	require('../config.php');
-	
+	if($conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
 	if(empty($_POST['TMoveLine'])) exit;
 	
 	$TMoveLine = GETPOST('TMoveLine');
 	$element=GETPOST('element');
 	$action = GETPOST('action');
+    if($element == 'operationorder') $classname = 'OperationOrder';
+    else $classname = $element;
 	
-	
-	$object = new $element($db);
+	$object = new $classname($db);
 	$object->fetch(GETPOST('id'));
 	
 	$old_object = new $element($db);
@@ -20,10 +21,11 @@
 	
 	if($action == 'split' || $action=='copy') {
 		
-		$fk_target = GETPOST('fk_propal_split');
+		$fk_target = GETPOST('fk_element_split');
 		if ($fk_target > 0)
 		{
-			$new_object = new $element($db);
+
+			$new_object = new $classname($db);
 			$new_object->fetch($fk_target);
 
 			// copie des coefs de la propal source si la propal de destination en est dépourvu
@@ -93,14 +95,16 @@
 		}
 		else
 		{
-		    /** @var Propal $object */
-		    if ((float) DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
-			else $id_new = $object->createFromClone((int)GETPOST('socid'));
+            if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
+            else {
+                if((float)DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+                else $id_new = $object->createFromClone((int)GETPOST('socid'));
+            }
 		//	print "création $id_new<br>";
-			$new_object = new $element($db);
+			$new_object = new $classname($db);
 			$new_object->fetch($id_new);
 		//	var_dump($TMoveLine,$new_object->lines);
-			
+
 			foreach($new_object->lines as $k=>$line) {
 
 				$lineid = empty($line->id) ? $line->rowid : $line->id;
@@ -128,7 +132,6 @@
 		foreach($old_object->lines as $k=>$line) {
 	                 
 	         $lineid = empty($line->id) ? $line->rowid : $line->id;
-	         
 	         if(isset($TMoveLine[$k])) {
 //	         	print "Suppresion ligne old $lineid";
 	                 $old_object->deleteline($lineid, $user);
