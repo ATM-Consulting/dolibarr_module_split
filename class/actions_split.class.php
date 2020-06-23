@@ -108,7 +108,7 @@ class ActionsSplit
                                                     url: '<?php echo dol_buildpath('/split/script/splitLines.php', 1); ?>'
                                                     , method: 'POST'
                                                     , data: $('#splitform').serialize()
-                                                    , dataType: 'JSON'
+                                                    , dataType: 'html'
                                                 }).done(function (url) {
                                                     document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
                                                 });
