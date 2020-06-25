@@ -33,7 +33,7 @@ class ActionsSplit
 			}
 			if($object->element === 'operationorder') {
                 $status = new Operationorderstatus($db);
-                $res = $status->fetchDefault(0, $this->entity);
+                $res = $status->fetchDefault(0, $conf->entity);
             }
         	if (($object->statut == 0 || ($conf->operationorder->enabled
                         && ($status->code === $object->objStatus->code) || (!empty($conf->global->OPODER_STATUS_ON_CLONE) && $conf->global->OPODER_STATUS_ON_CLONE === $object->objStatus->id)))
