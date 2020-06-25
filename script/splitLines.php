@@ -1,15 +1,16 @@
 <?php
 
 	require('../config.php');
-	
+	if($conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
 	if(empty($_POST['TMoveLine'])) exit;
 	
 	$TMoveLine = GETPOST('TMoveLine');
 	$element=GETPOST('element');
 	$action = GETPOST('action');
+    if($element == 'operationorder') $classname = 'OperationOrder';
+    else $classname = $element;
 	
-	
-	$object = new $element($db);
+	$object = new $classname($db);
 	$object->fetch(GETPOST('id'));
 	
 	$old_object = new $element($db);
@@ -20,10 +21,11 @@
 	
 	if($action == 'split' || $action=='copy') {
 		
-		$fk_target = GETPOST('fk_propal_split');
+		$fk_target = GETPOST('fk_element_split');
 		if ($fk_target > 0)
 		{
-			$new_object = new $element($db);
+
+			$new_object = new $classname($db);
 			$new_object->fetch($fk_target);
 
 			// copie des coefs de la propal source si la propal de destination en est dépourvu
@@ -64,11 +66,14 @@
 			foreach ($TMoveLine as $k => $line)
 			{
 				$line = $old_object->lines[$k];
-				/**
-				 * @var Propal pour le moment le split ce fait que sur une propal
-				 */
-				$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
 
+				
+                if($object->element == 'operationorder') {
+                    $newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
+                    $new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
+                }
+                else $newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except); 
+                    
 				if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
 				    // nomenclature de la ligne source
                     $n = new TNomenclature;
@@ -93,21 +98,33 @@
 		}
 		else
 		{
-		    /** @var Propal $object */
-		    if ((float) DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
-			else $id_new = $object->createFromClone((int)GETPOST('socid'));
+            if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
+            else {
+                if((float)DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+                else $id_new = $object->createFromClone((int)GETPOST('socid'));
+            }
 		//	print "création $id_new<br>";
-			$new_object = new $element($db);
+			$new_object = new $classname($db);
 			$new_object->fetch($id_new);
 		//	var_dump($TMoveLine,$new_object->lines);
-			
+            if($object->element == 'operationorder') {
+                $TNestedToKeep = array();
+                foreach($new_object->lines as $k=>$line) {
+                    if(isset($TMoveLine[$k])) {
+                        $TNestedToKeep += $line->fetch_all_children_lines(0, true, true);
+                        $TNestedToKeep[$line->id] = $line;
+                    }
+                }
+            }
 			foreach($new_object->lines as $k=>$line) {
 
 				$lineid = empty($line->id) ? $line->rowid : $line->id;
 
 				if(!isset($TMoveLine[$k])) {
 		 //       	print "Suppresion ligne $k $lineid<br>";
-						$new_object->deleteline($lineid, $user);
+                    if($object->element != 'operationorder' || ($object->element == 'operationorder' && !array_key_exists($lineid, $TNestedToKeep))) {
+                        $new_object->deleteline($lineid, $user);
+                    }
 				}
 				else{
 		   //	 	print "ok $k $lineid<br>";
@@ -128,7 +145,6 @@
 		foreach($old_object->lines as $k=>$line) {
 	                 
 	         $lineid = empty($line->id) ? $line->rowid : $line->id;
-	         
 	         if(isset($TMoveLine[$k])) {
 //	         	print "Suppresion ligne old $lineid";
 	                 $old_object->deleteline($lineid, $user);

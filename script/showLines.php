@@ -4,14 +4,15 @@
 	
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 	dol_include_once('/split/lib/split.lib.php');
-	
+	if(!empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
 	$element = GETPOST('element');
 	$id = GETPOST('id');
 	
 	$langs->load('split@split');
 	$langs->load('companies');
-	
-	$object = new $element($db);
+	if($element == 'operationorder') $classname = 'OperationOrder';
+	else $classname = $element;
+	$object = new $classname($db);
 	
 	$object->fetch($id);
 	
@@ -33,7 +34,7 @@
 		echo ' - '. $langs->trans('EntityTo').' : '. $mc->select_entities($conf->entity, 'split_entity');	
 	}
 	
-	echo ' - <b>'.$langs->trans('Or').'</b> - '. $langs->trans('PropalTarget').' : '.getHtmlSelectPropals($conf->entity, array($object->id));
+	echo ' - <b>'.$langs->trans('Or').'</b> - '. $langs->trans('Target').' : '.getHtmlSelectElements($conf->entity, array($object->id), $element);
 			
 	?>
 	<br><br>
@@ -51,9 +52,8 @@
 	<?php
 	
 	$class='';
-	
 	foreach($object->lines as $k=>$line) {
-		
+        if($object->element == 'operationorder' && !empty($line->fk_parent_line)) continue;
 		if($line->fk_product>0) {
 			$prod=new Product($db);
 			$prod->fetch($line->fk_product);
@@ -85,7 +85,7 @@
 			<tr class="<?php echo $class; ?>">
 				<td><?php echo $label ?></td>
 				<td align="right"><?php echo round($line->tva_tx,2) ?>%</td>
-				<td align="right"><?php echo price($line->subprice,0,'',1,-1,-1,$conf->currency); ?></td>
+				<td align="right"><?php echo price(empty($line->subprice)?$line->price:$line->subprice,0,'',1,-1,-1,$conf->currency); ?></td>
 				<td align="right"><?php echo $line->qty ?></td>
 				<td align="right"><?php echo round($line->remise_percent,2) ?>%</td>
 				<td align="right"><?php echo price($line->total_ht,0,'',1,-1,-1,$conf->currency); ?></td>
