@@ -35,7 +35,8 @@ class ActionsSplit
                 $status = new Operationorderstatus($db);
                 $res = $status->fetchDefault(0, $this->entity);
             }
-        	if (($object->statut == 0 || ($conf->operationorder->enabled && $status->code === $object->objStatus->code))
+        	if (($object->statut == 0 || ($conf->operationorder->enabled
+                        && ($status->code === $object->objStatus->code) || (!empty($conf->global->OPODER_STATUS_ON_CLONE) && $conf->global->OPODER_STATUS_ON_CLONE === $object->objStatus->id)))
                 && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
 			
 
