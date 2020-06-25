@@ -33,7 +33,7 @@ class ActionsSplit
 			}
 			if($object->element === 'operationorder') {
                 $status = new Operationorderstatus($db);
-                $res = $status->fetchDefault(0, $this->entity);
+                $res = $status->fetchDefault(0, $conf->entity);
             }
         	if (($object->statut == 0 || ($conf->operationorder->enabled && $status->code === $object->objStatus->code))
                 && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
