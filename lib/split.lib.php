@@ -66,13 +66,20 @@ function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
     if($element == 'operationorder') $sql = 'SELECT p.rowid, p.ref, s.nom, s.code_client FROM '.MAIN_DB_PREFIX.'operationorder p';
     if($element == 'propal') $sql = 'SELECT p.rowid, p.ref,  p.total_ht, s.nom, s.code_client, '.((float)DOL_VERSION >= 5.0 ? 'p.multicurrency_code' : "'$conf->currency'").' as currency_code FROM '.MAIN_DB_PREFIX.'propal p';
     $sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'societe s ON (p.fk_soc = s.rowid)';
-    $sql .= ' WHERE p.entity = '.$entity;
+
     if($element == 'operationorder') {
-        $sql .= ' AND p.status = (SELECT rowid FROM '.MAIN_DB_PREFIX.'operationorder_status WHERE status = 1 ';
+        $sql .= ' WHERE p.entity IN ('.getEntity('operationorder').') ';
+        $sql .= ' AND (p.status = (SELECT rowid FROM '.MAIN_DB_PREFIX.'operationorder_status WHERE status = 1 ';
         $sql .= " AND entity IN (".getEntity('operationorder').") ";
         $sql .= ' ORDER BY rang ASC LIMIT 1)';
+        if(!empty($conf->global->OPODER_STATUS_ON_CLONE)) $sql .= " OR p.status=".$conf->global->OPODER_STATUS_ON_CLONE;
+        $sql .= ')';
+
     }
-    else $sql .= ' AND p.fk_statut = '.(property_exists('Propal', 'STATUS_DRAFT') ? Propal::STATUS_DRAFT : 0);
+    else{
+        $sql .= ' WHERE p.entity = '.$entity;
+        $sql .= ' AND p.fk_statut = '.(property_exists('Propal', 'STATUS_DRAFT') ? Propal::STATUS_DRAFT : 0);
+    }
     if(! empty($TExcludeId)) $sql .= ' AND p.rowid NOT IN ('.implode(',', $TExcludeId).')';
     $sql .= ' ORDER BY p.ref';
 
