@@ -3,13 +3,12 @@
 	require('../config.php');
 	if($conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
 	if(empty($_POST['TMoveLine'])) exit;
-	
 	$TMoveLine = GETPOST('TMoveLine');
 	$element=GETPOST('element');
 	$action = GETPOST('action');
     if($element == 'operationorder') $classname = 'OperationOrder';
     else $classname = $element;
-	
+	global $id_origin_line;
 	$object = new $classname($db);
 	$object->fetch(GETPOST('id'));
 	
@@ -67,7 +66,7 @@
 			{
 				$line = $old_object->lines[$k];
 
-				
+				$id_origin_line = $line->id;
                 if($object->element == 'operationorder') {
                     $newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
                     $new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
@@ -84,14 +83,6 @@
                         continue;
                     }
 
-                    // copie de la nomenclature ligne vers la ligne de destination
-                    $newN = new TNomenclature;
-                    $newN->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);
-					$newN->reinit();
-					$newN->object_type = $element;
-					$newN->fk_object = $newLineId;
-
-					$newN->save($PDOdb);
 
                 }
 			}
