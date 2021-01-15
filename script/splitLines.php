@@ -143,7 +143,8 @@
 	    }       
 	}
 
-	if ($action !== 'delete' && method_exists($new_object, 'getNomUrl'))
+	if ($action !== 'delete')
     {
-        print urlencode($new_object->getNomUrl());
+        if(floatval(DOL_VERSION) <= 12.0 && method_exists($new_object, 'getNomUrl')) print urlencode($new_object->getNomUrl());
+        elseif(floatval(DOL_VERSION) > 12.0) print urlencode($new_object->ref);
     }
