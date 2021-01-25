@@ -109,7 +109,6 @@ require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
                 if((float)DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
                 else $id_new = $object->createFromClone((int)GETPOST('socid'));
             }
-		//	print "création $id_new<br>";
 			$new_object = new $classname($db);
 			$new_object->fetch($id_new);
 		//	var_dump($TMoveLine,$new_object->lines);
@@ -122,18 +121,25 @@ require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
                     }
                 }
             }
+
 			foreach($new_object->lines as $k=>$line) {
 
 				$lineid = empty($line->id) ? $line->rowid : $line->id;
 
 				if(!isset($TMoveLine[$k])) {
-		 //       	print "Suppresion ligne $k $lineid<br>";
                     if($object->element != 'operationorder' || ($object->element == 'operationorder' && !array_key_exists($lineid, $TNestedToKeep))) {
-                        $new_object->deleteline($lineid, $user);
+
+                        if ($object->element == 'commande' ){
+                            // commande
+                            $new_object->deleteline($user,$lineid);
+                        } else {
+                            //propal || facture
+                            $new_object->deleteline($lineid);
+                        }
                     }
 				}
 				else{
-		   //	 	print "ok $k $lineid<br>";
+
 				}
 			}
 		}  		
@@ -150,8 +156,15 @@ if($action == 'split' || $action == 'delete') {
     foreach($old_object->lines as $k => $line) {
         $lineid = empty($line->id) ? $line->rowid : $line->id;
         if(isset($TMoveLine[$k])) {
-            if($old_object->element == 'commande') $old_object->deleteline($user, $lineid);
-            else $old_object->deleteline($lineid);
+
+            if ($old_object->element == 'commande' ){
+                // commande
+                $old_object->deleteline($user,$lineid);
+            } else {
+                //propal || facture
+                $old_object->deleteline($lineid);
+            }
+
         }
     }
 }
