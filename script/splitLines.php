@@ -24,6 +24,8 @@ require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 	if($action == 'split' || $action=='copy') {
 		
 		$fk_target = GETPOST('fk_element_split');
+
+
 		if ($fk_target > 0)
 		{
 
@@ -106,12 +108,17 @@ require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 		{
             if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
             else {
-                if((float)DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+                if((float)DOL_VERSION >= 10.0){
+                    if ($object->element == 'commande' || $object->element == 'propal' ){
+                        $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+                    }else{
+                        $id_new = $object->createFromClone($user, $object->id);
+                    }
+                }
                 else $id_new = $object->createFromClone((int)GETPOST('socid'));
             }
 			$new_object = new $classname($db);
 			$new_object->fetch($id_new);
-		//	var_dump($TMoveLine,$new_object->lines);
             if($object->element == 'operationorder') {
                 $TNestedToKeep = array();
                 foreach($new_object->lines as $k=>$line) {
