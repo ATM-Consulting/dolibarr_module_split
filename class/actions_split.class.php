@@ -65,6 +65,14 @@ class ActionsSplit
                 else if($object->element == 'operationorder'){
                     $fiche = '/operationorder/operationorder_card.php';
                 }
+                else if($object->element == 'commande') {
+                    if(floatval(DOL_VERSION) >= 3.7) $fiche = '/commande/card.php';
+                    else $fiche = '/commande/fiche.php';
+                }
+                else if($object->element == 'facture') {
+                    if(floatval(DOL_VERSION) >= 6.0) $fiche = '/compta/facture/card.php';
+                    else $fiche = '/compta/facture.php';
+                }
 
 				?><script type="text/javascript">
 					$(document).ready(function() {
