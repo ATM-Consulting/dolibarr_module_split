@@ -99,7 +99,7 @@ class ActionsSplit
 													,dataType: "json"
 													// La fonction à apeller si la requête aboutie
 													,success: function (data) {
-														console.log(data);
+														//console.log(data);
 														// Loading data
 														if(data.result > 0){
 															document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&token=" + data.newToken;
@@ -134,7 +134,7 @@ class ActionsSplit
 													// La fonction à apeller si la requête aboutie
 													,success: function (data) {
 														// Loading data
-														console.log(data);
+														//console.log(data);
 														if(data.result > 0){
 															document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&token=" + data.newToken;
 														}
