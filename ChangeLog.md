@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
-
+- NEW : Prise en compte des objets Facture et Commande *12/01/2021* - 2.1.0
 
 ## Version 2.0
 
