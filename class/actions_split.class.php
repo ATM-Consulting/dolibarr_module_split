@@ -29,12 +29,12 @@ class ActionsSplit
 			}
 			else if(GETPOST('actionSplit') == 'ok') {
 			    $url = GETPOST('new_url');
-			    if (!empty($url)) $url = '- '.$url;
+			    if (!empty($url)) $url = '- '.urldecode($url);
                 setEventMessage($langs->trans('SplitOk', $url));
 			}
 			else if(GETPOST('actionSplitCopy') == 'ok') {
                 $url = GETPOST('new_url');
-                if (!empty($url)) $url = '- '.$url;
+                if (!empty($url)) $url = '- '.urldecode($url);
                 setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
 			if($conf->operationorder->enabled && $object->element === 'operationorder') {
@@ -110,7 +110,7 @@ class ActionsSplit
                                                     , data: $('#splitform').serialize()
                                                     , dataType: 'html'
                                                 }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + url;
+                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + encodeURI(url);
                                                 });
 
 												$( this ).dialog( "close" );
@@ -127,7 +127,7 @@ class ActionsSplit
                                                     , data: $('#splitform').serialize()
                                                     , dataType: 'html'
                                                 }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
+                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + encodeURI(url);
                                                 });
 
 												$( this ).dialog( "close" );
