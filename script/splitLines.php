@@ -173,7 +173,7 @@
 			$db->query("UPDATE ".MAIN_DB_PREFIX.$new_object->table_element." SET entity=".$entity." WHERE rowid=".$new_object->id );
 		}
 
-		$linkToDocument = 'ya pas ';
+		$linkToDocument = '';
 		if (!empty($new_object) && is_object($new_object) && method_exists($new_object, 'getNomUrl')){
 			$linkToDocument = $new_object->getNomUrl();
 		}
