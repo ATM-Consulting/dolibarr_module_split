@@ -1,5 +1,5 @@
 <?php
-	
+
 	if(is_file('../main.inc.php'))$dir = '../';
 	else  if(is_file('../../../main.inc.php'))$dir = '../../../';
 	else $dir = '../../';
@@ -15,5 +15,5 @@
 	}
 
 	dol_include_once('/comm/propal/class/propal.class.php');
-	
+
 
