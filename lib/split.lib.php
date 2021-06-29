@@ -64,7 +64,9 @@ function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
 	$TElement = array(0 => '');
 
     if($element == 'operationorder') $sql = 'SELECT p.rowid, p.ref, s.nom, s.code_client FROM '.MAIN_DB_PREFIX.'operationorder p';
-    if($element == 'propal') $sql = 'SELECT p.rowid, p.ref,  p.total_ht, s.nom, s.code_client, '.((float)DOL_VERSION >= 5.0 ? 'p.multicurrency_code' : "'$conf->currency'").' as currency_code FROM '.MAIN_DB_PREFIX.'propal p';
+    elseif($element == 'propal') $sql = 'SELECT p.rowid, p.ref,  p.total_ht, s.nom, s.code_client, '.((float)DOL_VERSION >= 5.0 ? 'p.multicurrency_code' : "'$conf->currency'").' as currency_code FROM '.MAIN_DB_PREFIX.'propal p';
+    elseif($element == 'commande') $sql = 'SELECT p.rowid, p.ref,  p.total_ht, s.nom, s.code_client, '.((float)DOL_VERSION >= 5.0 ? 'p.multicurrency_code' : "'$conf->currency'").' as currency_code FROM '.MAIN_DB_PREFIX.'commande p';
+    elseif($element == 'facture') $sql = 'SELECT p.rowid, p.ref,  p.total, s.nom, s.code_client, '.((float)DOL_VERSION >= 5.0 ? 'p.multicurrency_code' : "'$conf->currency'").' as currency_code FROM '.MAIN_DB_PREFIX.'facture p';
     $sql .= ' INNER JOIN '.MAIN_DB_PREFIX.'societe s ON (p.fk_soc = s.rowid)';
 
     if($element == 'operationorder') {

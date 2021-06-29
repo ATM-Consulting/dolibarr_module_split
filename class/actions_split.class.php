@@ -24,6 +24,19 @@ class ActionsSplit
 				$displayButton = false;
 			}
 
+			if(GETPOST('actionSplitDelete') == 'ok') {
+				setEventMessage($langs->trans('SplitDeleteOk'));
+			}
+			else if(GETPOST('actionSplit') == 'ok') {
+			    $url = GETPOST('new_url');
+			    if (!empty($url)) $url = '- '.$url;
+                setEventMessage($langs->trans('SplitOk', $url));
+			}
+			else if(GETPOST('actionSplitCopy') == 'ok') {
+                $url = GETPOST('new_url');
+                if (!empty($url)) $url = '- '.$url;
+                setEventMessage($langs->trans('SplitCopyOk', $url));
+			}
 			if($conf->operationorder->enabled && $object->element === 'operationorder') {
 				dol_include_once('/operationorder/class/operationorderstatus.class.php');
                 $statusLowerRang = new Operationorderstatus($db);
@@ -52,6 +65,15 @@ class ActionsSplit
                 else if($object->element == 'operationorder'){
                     $fiche = '/operationorder/operationorder_card.php';
                 }
+                else if($object->element == 'commande') {
+                    if(floatval(DOL_VERSION) >= 3.7) $fiche = '/commande/card.php';
+                    else $fiche = '/commande/fiche.php';
+                }
+                else if($object->element == 'facture') {
+                    if(floatval(DOL_VERSION) >= 6.0) $fiche = '/compta/facture/card.php';
+                    else $fiche = '/compta/facture.php';
+                }
+
 				$token = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 				?><script type="text/javascript">
 					$(document).ready(function() {

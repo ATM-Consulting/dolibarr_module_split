@@ -62,7 +62,7 @@ class modsplit extends DolibarrModules
         // (where XXX is value of numeric property 'numero' of module)
         $this->description = "Description of module split";
         // Possible values for version are: 'development', 'experimental' or version
-        $this->version = '2.0.1';
+        $this->version = '2.1.0';
         // Key used in llx_const table to save module status enabled/disabled
         // (where MYMODULE is value of property name of module in uppercase)
         $this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -218,9 +218,6 @@ class modsplit extends DolibarrModules
         $this->boxes = array(); // Boxes list
         $r = 0;
         // Example:
-
-        $this->boxes[$r][1] = "split_box@split";
-        $r ++;
         /*
           $this->boxes[$r][1] = "myboxb.php";
           $r++;
