@@ -74,6 +74,7 @@ class ActionsSplit
                     else $fiche = '/compta/facture.php';
                 }
 
+				$token = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 				?><script type="text/javascript">
 					$(document).ready(function() {
 
@@ -93,22 +94,23 @@ class ActionsSplit
 									,width:'80%'
 									,modal: true
 									,buttons: [
-										{ text: "<?php echo $langs->transnoentities('SimplyDelete'); ?>", click: function() {
+										{
+											text: "<?php echo $langs->transnoentities('SimplyDelete'); ?>",
+											click: function() {
 
 												$('#splitform input[name=action]').val('delete');
 
 												$.post('<?php echo dol_buildpath('/split/script/splitLines.php',1) ?>', $('#splitform').serialize(), function() {
-
-													document.location.href="<?php echo dol_buildpath($fiche.'?id='.$object->id.'&actionSplitDelete=ok',1) ?>";
-
+													document.location.href="<?php echo dol_buildpath($fiche,1).'?id='.$object->id.'&actionSplitDelete=ok&token='.$token; ?>";
 												});
 
 												$( this ).dialog( "close" );
-
-
 											}
-										}
-										,{ text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>", title: "<?php echo $langs->transnoentities('SimplyCopyTitle'); ?>", click: function() {
+										},
+										{
+											text: "<?php echo $langs->transnoentities('SimplyCopy'); ?>",
+											title: "<?php echo $langs->transnoentities('SimplyCopyTitle'); ?>",
+											click: function() {
 
 												$('#splitform input[name=action]').val('copy');
 
@@ -116,31 +118,63 @@ class ActionsSplit
                                                     url: '<?php echo dol_buildpath('/split/script/splitLines.php', 1); ?>'
                                                     , method: 'POST'
                                                     , data: $('#splitform').serialize()
-                                                    , dataType: 'html'
-                                                }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplitCopy=ok&new_url=" + url;
-                                                });
+													,dataType: "json"
+													// La fonction à apeller si la requête aboutie
+													,success: function (data) {
+														//console.log(data);
+														// Loading data
+														if(data.result > 0){
+															document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&token=" + data.newToken;
+														}
+														else{
+															if(data.errorMessage.length > 0){
+																$.jnotify(data.errorMessage, 'error', {timeout: 5, type: 'error', css: 'error'});
+															}else{
+																$.jnotify('UnknowError', 'error', {timeout: 5, type: 'error', css: 'error'});
+															}
+														}
+													}
+													// La fonction à appeler si la requête n'a pas abouti
+													,error: function( jqXHR, textStatus ) {
+														$.jnotify("Request failed: " + textStatus , 'error', {timeout: 5, type: 'error', css: 'error'});
+													}
+												});
 
 												$( this ).dialog( "close" );
-
-
 											}
-										}
-
-										,{ text: "<?php echo $langs->transnoentities('SplitIt'); ?>", title: "<?php echo $langs->transnoentities('SplitItTitle'); ?>", click: function() {
+										},
+										{
+											text: "<?php echo $langs->transnoentities('SplitIt'); ?>",
+											title: "<?php echo $langs->transnoentities('SplitItTitle'); ?>",
+											click: function() {
 
                                                 $.ajax({
                                                     url: '<?php echo dol_buildpath('/split/script/splitLines.php', 1); ?>'
                                                     , method: 'POST'
                                                     , data: $('#splitform').serialize()
-                                                    , dataType: 'html'
-                                                }).done(function (url) {
-                                                    document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&actionSplit=ok&new_url=" + url;
-                                                });
+													,dataType: "json"
+													// La fonction à apeller si la requête aboutie
+													,success: function (data) {
+														// Loading data
+														//console.log(data);
+														if(data.result > 0){
+															document.location.href = "<?php echo dol_buildpath($fiche, 1).'?id='.$object->id; ?>&token=" + data.newToken;
+														}
+														else{
+															if(data.errorMessage.length > 0){
+																$.jnotify(data.errorMessage, 'error', {timeout: 5, type: 'error', css: 'error'});
+															}else{
+																$.jnotify('UnknowError', 'error', {timeout: 5, type: 'error', css: 'error'});
+															}
+														}
+													}
+													// La fonction à appeler si la requête n'a pas abouti
+													,error: function( jqXHR, textStatus ) {
+														$.jnotify("Request failed: " + textStatus , 'error', {timeout: 5, type: 'error', css: 'error'});
+													}
+												});
 
 												$( this ).dialog( "close" );
-
-
 											}
 										}
 
