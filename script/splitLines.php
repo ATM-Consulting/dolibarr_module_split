@@ -29,8 +29,8 @@
 	$json->newToken = function_exists('newToken')?newToken():$_SESSION['newtoken'];
 
 	$id = GETPOST('id', 'int');
-	$element = GETPOST('element');
-	$action = GETPOST('action');
+	$element = GETPOST('element', 'alphanohtml');
+	$action = GETPOST('action', 'alphanohtml');
 	$entity = GETPOST('split_entity', 'int');
 	$TMoveLine = GETPOST('TMoveLine', 'array');
 	if(empty($TMoveLine)){
@@ -40,8 +40,8 @@
 		exit;
 	}
 
-    if($element == 'operationorder') $classname = 'OperationOrder';
-    else $classname = $element;
+	if($element == 'operationorder') $classname = 'OperationOrder';
+	else $classname = $element;
 	global $id_origin_line;
 	$object = new $classname($db);
 	$object->fetch($id);
@@ -112,52 +112,52 @@
 				$line = $old_object->lines[$k];
 
 				$id_origin_line = $line->id;
-                if($object->element == 'operationorder') {
-                    $newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
-                    $new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
-                }
-                elseif($object->element == 'propal') {
-                    /** @var Propal $new_object */
-                    $newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
-                }
-                elseif($object->element == 'commande') {
-                    /** @var Commande $new_object */
-                    $newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 0, $line->fk_remise_except, 'HT', 0, $line->date_start, $line->date_end, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->array_options, $line->fk_unit);
-                }
-                else {
-                    /** @var Facture $new_object */
-                    $newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, $line->date_start, $line->date_end, 0, 0, $line->fk_remise_except, 'HT', 0, $line->product_type, -1, $line->special_code, 0, 0, 0, 0, $line->pa_ht, $line->label, $line->array_options, 100, 0, $line->fk_unit);
-                }
+				if($object->element == 'operationorder') {
+					$newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
+					$new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
+				}
+				elseif($object->element == 'propal') {
+					/** @var Propal $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
+				}
+				elseif($object->element == 'commande') {
+					/** @var Commande $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 0, $line->fk_remise_except, 'HT', 0, $line->date_start, $line->date_end, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->array_options, $line->fk_unit);
+				}
+				else {
+					/** @var Facture $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, $line->date_start, $line->date_end, 0, 0, $line->fk_remise_except, 'HT', 0, $line->product_type, -1, $line->special_code, 0, 0, 0, 0, $line->pa_ht, $line->label, $line->array_options, 100, 0, $line->fk_unit);
+				}
 
 
 				if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
-				    // nomenclature de la ligne source
-                    $n = new TNomenclature;
-                    $n->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);
+					// nomenclature de la ligne source
+					$n = new TNomenclature;
+					$n->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);
 
-                    if($n->rowid == 0 && (count($n->TNomenclatureDet) + count($n->TNomenclatureWorkstation)) > 0) {
-                        // Le cas d'une nomenclature non chargée : ça ne sert à rien de copier la Nomenclature...
-                        continue;
-                    }
-                }
+					if($n->rowid == 0 && (count($n->TNomenclatureDet) + count($n->TNomenclatureWorkstation)) > 0) {
+						// Le cas d'une nomenclature non chargée : ça ne sert à rien de copier la Nomenclature...
+						continue;
+					}
+				}
 			}
 		}
 		else
 		{
-            if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
-            else {
-                if((float)DOL_VERSION >= 10.0){
-                    if ($object->element == 'commande' || $object->element == 'propal' ){
-                        $id_new = $object->createFromClone($user, (int)GETPOST('socid'));
-                    }else{
-                        $id_new = $object->createFromClone($user, $object->id);
-                    }
-                }
-                else $id_new = $object->createFromClone((int)GETPOST('socid'));
-            }
+			if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
+			else {
+				if((float)DOL_VERSION >= 10.0){
+					if ($object->element == 'commande' || $object->element == 'propal' ){
+						$id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+					}else{
+						$id_new = $object->createFromClone($user, $object->id);
+					}
+				}
+				else $id_new = $object->createFromClone((int)GETPOST('socid'));
+			}
 
-            if ($id_new > 0)
-            {
+			if ($id_new > 0)
+			{
 				$json->newObjectId = $id_new;
 
 				$json->log[] = "création $id_new";
@@ -181,13 +181,13 @@
 						$json->log[] = "Suppresion ligne $k $lineid";
 						if($object->element != 'operationorder' || ($object->element == 'operationorder' && !array_key_exists($lineid, $TNestedToKeep))) {
 
-		                    if ($object->element == 'commande' ){
-		                        // commande
-		                        $new_object->deleteline($user,$lineid);
-		                    } else {
-		                        //propal || facture
-		                        $new_object->deleteline($lineid);
-		                    }
+							if ($object->element == 'commande' ){
+								// commande
+								$new_object->deleteline($user,$lineid);
+							} else {
+								//propal || facture
+								$new_object->deleteline($lineid);
+							}
 						}
 					}
 					else{
@@ -225,24 +225,24 @@
 	{
 		$errors = 0;
 		foreach($old_object->lines as $k=>$line) {
-	         $lineid = empty($line->id) ? $line->rowid : $line->id;
-	         if(isset($TMoveLine[$k])) {
-	         	$json->log[] = "Suppresion ligne old $lineid";
-	                 
-				if ($old_object->element == 'commande' ){
-			        // commande
-			        $resDel = $old_object->deleteline($user,$lineid);
-			    } else {
-			        //propal || facture
-			        $resDel = $old_object->deleteline($lineid);
-			    }
+			$lineid = empty($line->id) ? $line->rowid : $line->id;
+			if(isset($TMoveLine[$k])) {
+				$json->log[] = "Suppresion ligne old $lineid";
 
-				
-				if ($resDel<0) {
-					 $errors++;
+				if ($old_object->element == 'commande' ){
+					// commande
+					$resDel = $old_object->deleteline($user,$lineid);
+				} else {
+					//propal || facture
+					$resDel = $old_object->deleteline($lineid);
 				}
-	         }
-	    }
+
+
+				if ($resDel<0) {
+					$errors++;
+				}
+			}
+		}
 
 		if(empty($errors) && $action == 'delete' ) {
 			// coté js il y a une redirection, mais avec CSRF CHECK l'ancienne redirection avec get ne marche plus
