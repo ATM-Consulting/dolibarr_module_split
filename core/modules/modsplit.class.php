@@ -219,9 +219,6 @@ class modsplit extends DolibarrModules
 		$this->boxes = array(); // Boxes list
 		$r = 0;
 		// Example:
-
-		$this->boxes[$r][1] = "split_box@split";
-		$r ++;
 		/*
 		  $this->boxes[$r][1] = "myboxb.php";
 		  $r++;
