@@ -19,8 +19,8 @@
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 	dol_include_once('/split/lib/split.lib.php');
 	if(!empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
-	$element = GETPOST('element');
-	$id = GETPOST('id');
+	$element = GETPOST('element', 'alphanohtml');
+	$id = GETPOST('id', 'int');
 
 	$langs->load('split@split');
 	$langs->load('companies');
@@ -70,7 +70,7 @@
 
 	$class='';
 	foreach($object->lines as $k=>$line) {
-        if($object->element == 'operationorder' && !empty($line->fk_parent_line)) continue;
+		if($object->element == 'operationorder' && !empty($line->fk_parent_line)) continue;
 		if($line->fk_product>0) {
 			$prod=new Product($db);
 			$prod->fetch($line->fk_product);
