@@ -16,7 +16,8 @@ class ActionsSplit
 
 		$contexts = explode(':',$parameters['context']);
 
-		if(in_array('ordercard',$contexts) || in_array('propalcard',$contexts) || in_array('invoicecard',$contexts)|| in_array('operationordercard',$contexts)) {
+		// TODO make it work on invoices and orders before adding this button
+		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/|| in_array('operationordercard',$contexts)) {
 
 			if ($object->statut == 0 && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
 				$displayButton = true;

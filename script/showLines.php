@@ -24,6 +24,8 @@
 
 	$langs->load('split@split');
 	$langs->load('companies');
+
+	// TODO make it work with orders and invoices by using fetchObjectByElement function and fixing algo
 	if($element == 'operationorder') $classname = 'OperationOrder';
 	else $classname = $element;
 	$object = new $classname($db);
