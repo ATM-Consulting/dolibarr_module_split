@@ -37,6 +37,7 @@
 		exit;
 	}
 
+	// TODO make it work with orders and invoices by using fetchObjectByElement function and fixing algo
 	if($element == 'operationorder') $classname = 'OperationOrder';
 	else $classname = $element;
 	global $id_origin_line;
