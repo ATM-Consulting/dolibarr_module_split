@@ -13,3 +13,4 @@ SimplyCopyTitle=Si un document cible est sélectionné, alors la copie se fera d
 SplitItTitle=Si un document cible est sélectionné, alors le déplacement se fera directement dans celui-ci
 Or=Ou
 Target=Cible
+splitAbout = A propos du module Split
