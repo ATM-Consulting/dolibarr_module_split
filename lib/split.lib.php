@@ -32,10 +32,10 @@ function splitAdminPrepareHead()
     $h = 0;
     $head = array();
 
-    $head[$h][0] = dol_buildpath("/split/admin/split_setup.php", 1);
-    $head[$h][1] = $langs->trans("Settings");
-    $head[$h][2] = 'settings';
-    $h++;
+//    $head[$h][0] = dol_buildpath("/split/admin/split_setup.php", 1);
+//    $head[$h][1] = $langs->trans("Settings");
+//    $head[$h][2] = 'settings';
+//    $h++;
     $head[$h][0] = dol_buildpath("/split/admin/about.php", 1);
     $head[$h][1] = $langs->trans("About");
     $head[$h][2] = 'about';
@@ -58,9 +58,9 @@ function splitAdminPrepareHead()
 function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
 {
 	global $db,$form,$conf, $langs;
-	
+
 	if($element == 'propal') require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
-	
+
 	$TElement = array(0 => '');
 
     if($element == 'operationorder') $sql = 'SELECT p.rowid, p.ref, s.nom, s.code_client FROM '.MAIN_DB_PREFIX.'operationorder p';
@@ -100,6 +100,6 @@ function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
 	{
 		dol_print_error($db);
 	}
-	
+
 	return $form->selectarray('fk_element_split', $TElement, '', 0, 0, 0, '', 0, 0, 0, '', '', 1);
 }
