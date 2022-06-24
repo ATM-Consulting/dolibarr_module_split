@@ -2,8 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## Unreleased
-
-
+- NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" *11/05/2022* 2.2.0
+- NEW : Prise en compte des objets Facture et Commande *12/01/2021* - 2.1.0
 
 ## Version 2.0
 

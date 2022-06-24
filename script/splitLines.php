@@ -15,6 +15,9 @@
 	//if (! defined('NOBROWSERNOTIF'))     		 define('NOBROWSERNOTIF', '1');				// Disable browser notification
 
 	require('../config.php');
+	require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 
 	if($conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
 
@@ -114,7 +117,19 @@
 					$newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
 					$new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
 				}
-				else $newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
+				elseif($object->element == 'propal') {
+					/** @var Propal $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
+				}
+				elseif($object->element == 'commande') {
+					/** @var Commande $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 0, $line->fk_remise_except, 'HT', 0, $line->date_start, $line->date_end, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->array_options, $line->fk_unit);
+				}
+				else {
+					/** @var Facture $new_object */
+					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, $line->date_start, $line->date_end, 0, 0, $line->fk_remise_except, 'HT', 0, $line->product_type, -1, $line->special_code, 0, 0, 0, 0, $line->pa_ht, $line->label, $line->array_options, 100, 0, $line->fk_unit);
+				}
+
 
 				if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
 					// nomenclature de la ligne source
@@ -132,8 +147,14 @@
 		{
 			if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
 			else {
-				if((float)DOL_VERSION >= 10.0) $id_new = $object->createFromClone($user, (int)GETPOST('socid', 'int'));
-				else $id_new = $object->createFromClone((int)GETPOST('socid', 'int'));
+				if((float)DOL_VERSION >= 10.0){
+					if ($object->element == 'commande' || $object->element == 'propal' ){
+						$id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+					}else{
+						$id_new = $object->createFromClone($user, $object->id);
+					}
+				}
+				else $id_new = $object->createFromClone((int)GETPOST('socid'));
 			}
 
 			if ($id_new > 0)
@@ -160,7 +181,14 @@
 					if(!isset($TMoveLine[$k])) {
 						$json->log[] = "Suppresion ligne $k $lineid";
 						if($object->element != 'operationorder' || ($object->element == 'operationorder' && !array_key_exists($lineid, $TNestedToKeep))) {
-							$new_object->deleteline($lineid, $user);
+
+							if ($object->element == 'commande' ){
+								// commande
+								$new_object->deleteline($user,$lineid);
+							} else {
+								//propal || facture
+								$new_object->deleteline($lineid);
+							}
 						}
 					}
 					else{
@@ -198,14 +226,23 @@
 	{
 		$errors = 0;
 		foreach($old_object->lines as $k=>$line) {
-			 $lineid = empty($line->id) ? $line->rowid : $line->id;
-			 if(isset($TMoveLine[$k])) {
+			$lineid = empty($line->id) ? $line->rowid : $line->id;
+			if(isset($TMoveLine[$k])) {
 				$json->log[] = "Suppresion ligne old $lineid";
-					 $resDel = $old_object->deleteline($lineid, $user);
-					 if($resDel<0){
-						 $errors++;
-					 }
-			 }
+
+				if ($old_object->element == 'commande' ){
+					// commande
+					$resDel = $old_object->deleteline($user,$lineid);
+				} else {
+					//propal || facture
+					$resDel = $old_object->deleteline($lineid);
+				}
+
+
+				if ($resDel<0) {
+					$errors++;
+				}
+			}
 		}
 
 		if(empty($errors) && $action == 'delete' ) {
