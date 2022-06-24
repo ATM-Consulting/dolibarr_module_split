@@ -17,6 +17,7 @@
 	require('../config.php');
 
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+	include_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 	dol_include_once('/split/lib/split.lib.php');
 	if(!empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
 	$element = GETPOST('element', 'alphanohtml');
