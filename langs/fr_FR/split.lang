@@ -1,5 +1,5 @@
 Module104430Name = Split
-Module104430Desc = Permet de découper en deux
+Module104430Desc = Permet de découper des propositions commerciales
 SplitIt=Découper
 SplitThisDocument=Séparer les lignes de ce document 
 SimplyDelete=Supprimer les lignes du document %

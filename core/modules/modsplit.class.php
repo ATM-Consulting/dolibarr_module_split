@@ -75,7 +75,7 @@ class modsplit extends DolibarrModules
 		// use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png
 		// use this->picto='pictovalue@module'
-		$this->picto = 'icon16.png@split'; // mypicto@split
+		$this->picto = 'split.svg@split'; // mypicto@split
 		// Defined all module parts (triggers, login, substitutions, menus, css, etc...)
 		// for default path (eg: /split/core/xxxxx) (0=disable, 1=enable)
 		// for specific path of parts (eg: /split/core/modules/barcode)
