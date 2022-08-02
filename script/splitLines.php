@@ -19,7 +19,7 @@
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 	require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 
-	if($conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
+	if(!empty($conf->operationorder) && $conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
 
 	$json = new stdClass();
 	$json->result = 0; // 0 nothing, 1 ok, -x errors
@@ -74,7 +74,7 @@
 			$new_object->fetch($fk_target);
 
 			// copie des coefs de la propal source si la propal de destination en est dépourvu
-			if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
+			if(!empty($conf->nomenclature) && $conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
 				dol_include_once('/nomenclature/class/nomenclature.class.php');
 				$PDOdb = new TPDOdb;
 
@@ -131,7 +131,7 @@
 				}
 
 
-				if($conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
+				if(!empty($conf->nomenclature) && $conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
 					// nomenclature de la ligne source
 					$n = new TNomenclature;
 					$n->loadByObjectId($PDOdb, $line->id, $element, true, $line->fk_product, $line->qty, $old_object->id);

@@ -15,6 +15,7 @@ class ActionsSplit
 		$langs->load('split@split');
 
 		$contexts = explode(':',$parameters['context']);
+//		var_dump($contexts);exit;
 
 		// TODO make it work on invoices and orders before adding this button
 		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/|| in_array('operationordercard',$contexts)) {
@@ -38,7 +39,7 @@ class ActionsSplit
                 if (!empty($url)) $url = '- '.$url;
                 setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
-			if($conf->operationorder->enabled && $object->element === 'operationorder') {
+			if(!empty($conf->operationorder) && $conf->operationorder->enabled && $object->element === 'operationorder') {
 				dol_include_once('/operationorder/class/operationorderstatus.class.php');
                 $statusLowerRang = new Operationorderstatus($db);
                 $res = $statusLowerRang->fetchDefault(0, $conf->entity);
@@ -96,7 +97,7 @@ class ActionsSplit
 									,modal: true
 									,buttons: [
 										{
-											text: "<?php echo $langs->transnoentities('SimplyDelete'); ?>",
+											text: "<?php echo $langs->transnoentities('SimplyDelete', $object->ref); ?>",
 											click: function() {
 
 												$('#splitform input[name=action]').val('delete');
@@ -190,7 +191,6 @@ class ActionsSplit
 				</script><?php
 			}
 		}
-
 		return 0;
 	}
 }
