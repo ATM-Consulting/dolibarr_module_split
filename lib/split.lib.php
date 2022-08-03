@@ -91,6 +91,7 @@ function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
 	{
 		while ($row = $db->fetch_object($resql))
 		{
+			if(empty($TElement[$row->rowid])) $TElement[$row->rowid] = '';
 			$TElement[$row->rowid] .= $row->ref.' - ';
             if(!empty($row->total_ht)) $TElement[$row->rowid] .= price($row->total_ht, 0, $langs, 1, -1, -1, $row->currency_code);
 			$TElement[$row->rowid] .= $row->nom.' ('.$row->code_client.')';
