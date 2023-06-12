@@ -43,7 +43,7 @@ class modsplit extends DolibarrModules
 		$this->db = $db;
 
 		$this->editor_name = 'ATM Consulting';
-		$this->editor_name = 'https://www.atm-consulting.fr';
+		$this->editor_url = 'https://www.atm-consulting.fr';
 		// Id for module (must be unique).
 		// Use a free id here
 		// (See in Home -> System information -> Dolibarr for list of used modules id).
@@ -63,7 +63,9 @@ class modsplit extends DolibarrModules
 		// (where XXX is value of numeric property 'numero' of module)
 		$this->description = "Description of module split";
 		// Possible values for version are: 'development', 'experimental' or version
-		$this->version = '2.0.4';
+
+		$this->version = '2.2.3';
+
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
 		$this->const_name = 'MAIN_MODULE_' . strtoupper($this->name);
@@ -75,7 +77,7 @@ class modsplit extends DolibarrModules
 		// use this->picto='pictovalue'
 		// If file is in module/img directory under name object_pictovalue.png
 		// use this->picto='pictovalue@module'
-		$this->picto = 'icon16.png@split'; // mypicto@split
+		$this->picto = 'split.svg@split'; // mypicto@split
 		// Defined all module parts (triggers, login, substitutions, menus, css, etc...)
 		// for default path (eg: /split/core/xxxxx) (0=disable, 1=enable)
 		// for specific path of parts (eg: /split/core/modules/barcode)

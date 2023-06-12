@@ -17,8 +17,11 @@
 	require('../config.php');
 
 	require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 	dol_include_once('/split/lib/split.lib.php');
-	if(!empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
+	if(!empty($conf->operationorder) && !empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
 	$element = GETPOST('element', 'alphanohtml');
 	$id = GETPOST('id', 'int');
 

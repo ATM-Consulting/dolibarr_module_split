@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+## Version 2.2
+
+- FIX : Editor name  *03/08/2022* 2.2.3
+- FIX : Compat PHP 8  *02/08/2022* 2.2.2
+- FIX : Module icon  *12/05/2022* 2.2.1
+- NEW : Ajout de la class TechATM pour l'affichage de la page "A propos" *11/05/2022* 2.2.0
+- NEW : Prise en compte des objets Facture et Commande *12/01/2021* - 2.1.0
+
 ## Version 2.0
 - FIX : change filter setting for  forgeSQLFromUniversalSearchCriteria  in $form->select_company on showlines.php - *12/06/2023* - 2.0.4  
 - FIX : V16 FAMILY - *02/06/2022* - 2.0.3  
