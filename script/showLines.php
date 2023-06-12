@@ -46,7 +46,11 @@
 	echo $langs->trans("SelectThirdParty");
 
 	$form=new Form($db);
-	echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)');
+	if ((float) DOL_VERSION < 18.0) {
+		echo $form->select_company($object->socid, 'socid', '(s.client=1 OR s.client=2 OR s.client=3)');
+	}else{
+		echo $form->select_company($object->socid, 'socid', '( (s.client:=:1) OR (s.client:=:2)  OR (s.client:=:3) )');
+	}
 
 
 	if(!empty($mc)) {

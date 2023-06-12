@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 
 ## Version 2.0
+- FIX : change filter setting for  forgeSQLFromUniversalSearchCriteria  in $form->select_company on showlines.php - *12/06/2023* - 2.0.4  
 - FIX : V16 FAMILY - *02/06/2022* - 2.0.3  
 - FIX: Compatibility with Dolibarr 14.0 + remove unused files - *21/10/2021* - 2.0.2
 - FIX: Not encoded URL + compatibilité V13 + Bug de l'espace avec les langs *16/06/2021* - 2.0.1
