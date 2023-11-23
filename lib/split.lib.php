@@ -74,7 +74,7 @@ function getHtmlSelectElements($entity, $TExcludeId=array(), $element='propal')
         $sql .= ' AND (p.status = (SELECT rowid FROM '.MAIN_DB_PREFIX.'operationorder_status WHERE status = 1 ';
         $sql .= " AND entity IN (".getEntity('operationorder').") ";
         $sql .= ' ORDER BY rang ASC LIMIT 1)';
-        if(!empty($conf->global->OPODER_STATUS_ON_CLONE)) $sql .= " OR p.status=".$conf->global->OPODER_STATUS_ON_CLONE;
+		if (!empty(getDolGlobalInt('OPODER_STATUS_ON_CLONE'))) $sql .= " OR p.status=". getDolGlobalInt('OPODER_STATUS_ON_CLONE');
         $sql .= ')';
 
     }

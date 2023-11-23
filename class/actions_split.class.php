@@ -46,9 +46,10 @@ class ActionsSplit
                 	setEventMessage($statusLowerRang->error, 'errors');
 				}
 				$displayButton = $displayButton || ($statusLowerRang->code === $object->objStatus->code);
-				if (!empty($conf->global->OPODER_STATUS_ON_CLONE)) {
+
+				if (!empty(getDolGlobalInt('OPODER_STATUS_ON_CLONE'))) {
 					$statusFrom = new Operationorderstatus($db);
-					$res = $statusFrom->fetch($conf->global->OPODER_STATUS_ON_CLONE);
+					$res = $statusFrom->fetch(getDolGlobalInt('OPODER_STATUS_ON_CLONE'));
 					if ($res<0) {
 						setEventMessage($statusFrom->error, 'errors');
 					}
