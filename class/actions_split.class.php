@@ -20,11 +20,10 @@ class ActionsSplit
 		// TODO make it work on invoices and orders before adding this button
 		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/|| in_array('operationordercard',$contexts)) {
 
-			if ($object->statut == 0 && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
-				$displayButton = true;
-			} else {
-				$displayButton = false;
-			}
+			$rightCreate = function_exists('hasRight') ? $user->hasRight($object->element,'create') : $user->rights->{$object->element}->creer;
+			$rightWrite = function_exists('hasRight') ? $user->hasRight($object->element,'write') : $user->rights->{$object->element}->write;
+
+			$displayButton = ($object->statut == 0 && ($rightCreate || $rightWrite));
 
 			if(GETPOST('actionSplitDelete') == 'ok') {
 				setEventMessage($langs->trans('SplitDeleteOk'));
