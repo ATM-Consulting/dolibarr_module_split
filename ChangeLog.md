@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 - NEW : change user->right to hasRight() function - *23/11/2023* - 2.3.0  
         $conf->global to getDolGlobal
         add commonhookActions
+        remove ref to operationOrder module (deprecated module)
 
 
 ## Version 2.2

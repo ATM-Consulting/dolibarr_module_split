@@ -21,7 +21,7 @@ class ActionsSplit extends \split\RetroCompatCommonHookActions
 //		var_dump($contexts);exit;
 
 		// TODO make it work on invoices and orders before adding this button
-		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/|| in_array('operationordercard',$contexts)) {
+		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/) {
 
 			$rightCreate = function_exists('hasRight') ? $user->hasRight($object->element,'create') : $user->rights->{$object->element}->creer;
 			$rightWrite = function_exists('hasRight') ? $user->hasRight($object->element,'write') : $user->rights->{$object->element}->write;
@@ -41,24 +41,7 @@ class ActionsSplit extends \split\RetroCompatCommonHookActions
                 if (!empty($url)) $url = '- '.$url;
                 setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
-			if(!empty($conf->operationorder) && $conf->operationorder->enabled && $object->element === 'operationorder') {
-				dol_include_once('/operationorder/class/operationorderstatus.class.php');
-                $statusLowerRang = new Operationorderstatus($db);
-                $res = $statusLowerRang->fetchDefault(0, $conf->entity);
-                if ($res<0) {
-                	setEventMessage($statusLowerRang->error, 'errors');
-				}
-				$displayButton = $displayButton || ($statusLowerRang->code === $object->objStatus->code);
 
-				if (!empty(getDolGlobalInt('OPODER_STATUS_ON_CLONE'))) {
-					$statusFrom = new Operationorderstatus($db);
-					$res = $statusFrom->fetch(getDolGlobalInt('OPODER_STATUS_ON_CLONE'));
-					if ($res<0) {
-						setEventMessage($statusFrom->error, 'errors');
-					}
-					$displayButton =  $displayButton || ($statusFrom->code == $object->objStatus->code);
-				}
-            }
         	if ($displayButton) {
 
 				if($object->element=='facture')$idvar = 'facid';
@@ -66,9 +49,6 @@ class ActionsSplit extends \split\RetroCompatCommonHookActions
                 if($object->element == 'propal') {
                     if((float)DOL_VERSION >= 4.0) $fiche = '/comm/propal/card.php';
                     else $fiche = '/comm/propal.php';
-                }
-                else if($object->element == 'operationorder'){
-                    $fiche = '/operationorder/operationorder_card.php';
                 }
                 else if($object->element == 'commande') {
                     if(floatval(DOL_VERSION) >= 3.7) $fiche = '/commande/card.php';

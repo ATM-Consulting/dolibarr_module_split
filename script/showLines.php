@@ -21,7 +21,7 @@
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 	require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 	dol_include_once('/split/lib/split.lib.php');
-	if(!empty($conf->operationorder) && !empty($conf->operationorder->enabled)) dol_include_once('/operationorder/class/operationorder.class.php');
+
 	$element = GETPOST('element', 'alphanohtml');
 	$id = GETPOST('id', 'int');
 
@@ -29,8 +29,7 @@
 	$langs->load('companies');
 
 	// TODO make it work with orders and invoices by using fetchObjectByElement function and fixing algo
-	if($element == 'operationorder') $classname = 'OperationOrder';
-	else $classname = $element;
+	$classname = $element;
 	$object = new $classname($db);
 
 	$object->fetch($id);
@@ -79,7 +78,6 @@
 
 	$class='';
 	foreach($object->lines as $k=>$line) {
-		if($object->element == 'operationorder' && !empty($line->fk_parent_line)) continue;
 		if($line->fk_product>0) {
 			$prod=new Product($db);
 			$prod->fetch($line->fk_product);
