@@ -14,3 +14,4 @@ SplitItTitle=Si un document cible est sélectionné, alors le déplacement se fe
 Or=Ou
 Target=Cible
 splitAbout = A propos du module Split
+EmptyTMoveLine=Pas de ligne sélectionnée
