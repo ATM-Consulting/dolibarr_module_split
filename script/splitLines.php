@@ -73,7 +73,8 @@
 			$new_object->fetch($fk_target);
 
 			// copie des coefs de la propal source si la propal de destination en est dépourvu
-			if(!empty($conf->nomenclature) && $conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
+
+			if( isModEnabled('nomenclature') && in_array($element, array('propal', 'commande'))) {
 				dol_include_once('/nomenclature/class/nomenclature.class.php');
 				$PDOdb = new TPDOdb;
 
