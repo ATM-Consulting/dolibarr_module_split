@@ -64,7 +64,7 @@ class modsplit extends DolibarrModules
 		$this->description = "Description of module split";
 		// Possible values for version are: 'development', 'experimental' or version
 
-		$this->version = '2.2.3';
+		$this->version = '2.3.0';
 
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
@@ -98,7 +98,7 @@ class modsplit extends DolibarrModules
 			// Set this to relative path of css if module has its own css file
 			//'css' => '/split/css/mycss.css.php',
 			// Set here all hooks context managed by module
-			'hooks' => array('propalcard', 'invoicecard', 'ordercard', 'operationordercard')
+			'hooks' => array('propalcard', 'invoicecard', 'ordercard')
 			// Set here all workflow context managed by module
 			//'workflow' => array('order' => array('WORKFLOW_ORDER_AUTOCREATE_INVOICE'))
 		);

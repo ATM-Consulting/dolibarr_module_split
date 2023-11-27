@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- NEW : change user->right to hasRight() function - *23/11/2023* - 2.3.0  
+        $conf->global to getDolGlobal
+        add commonhookActions
+        Extras
+        remove ref to operationOrder module (deprecated module)
+        trad error missing  :  line selection
 
 
 ## Version 2.2

@@ -19,7 +19,7 @@
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 	require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture.class.php';
 
-	if(!empty($conf->operationorder) && $conf->operationorder->enabled) dol_include_once('/operationorder/class/operationorder.class.php');
+
 
 	$json = new stdClass();
 	$json->result = 0; // 0 nothing, 1 ok, -x errors
@@ -33,6 +33,7 @@
 	$action = GETPOST('action', 'alphanohtml');
 	$entity = GETPOST('split_entity', 'int');
 	$TMoveLine = GETPOST('TMoveLine', 'array');
+	$langs->load('split@split');
 	if(empty($TMoveLine)){
 		$json->result = -1; // 0 nothing, 1 ok, -x errors
 		$json->errorMessage = $langs->trans('EmptyTMoveLine');
@@ -40,9 +41,7 @@
 		exit;
 	}
 
-	// TODO make it work with orders and invoices by using fetchObjectByElement function and fixing algo
-	if($element == 'operationorder') $classname = 'OperationOrder';
-	else $classname = $element;
+	$classname = $element;
 	global $id_origin_line;
 	$object = new $classname($db);
 	$object->fetch($id);
@@ -74,6 +73,7 @@
 			$new_object->fetch($fk_target);
 
 			// copie des coefs de la propal source si la propal de destination en est dépourvu
+
 			if(!empty($conf->nomenclature) && $conf->nomenclature->enabled && in_array($element, array('propal', 'commande'))) {
 				dol_include_once('/nomenclature/class/nomenclature.class.php');
 				$PDOdb = new TPDOdb;
@@ -113,11 +113,7 @@
 				$line = $old_object->lines[$k];
 
 				$id_origin_line = $line->id;
-				if($object->element == 'operationorder') {
-					$newLineId = $new_object->addline($line->desc, $line->qty, $line->price, $line->fk_warehouse, $line->pc, $line->time_planned, $line->time_spent, $line->fk_product, $line->info_bits, $line->date_start, $line->date_end, $line->type, $line->rang, $line->special_code, $line->fk_parent_line, $line->label, $line->array_options, $line->origin, $line->origin_id);
-					$new_object->recurciveAddChildLines($newLineId, $line->fk_product, $line->qty);
-				}
-				elseif($object->element == 'propal') {
+				if($object->element == 'propal') {
 					/** @var Propal $new_object */
 					$newLineId = $new_object->addline($line->desc, $line->subprice, $line->qty, $line->tva_tx, $line->localtax1_tx, $line->localtax2_tx, $line->fk_product, $line->remise_percent, 'HT', 0, 0, $line->product_type, -1, $line->special_code, 0, 0, $line->pa_ht, $line->label, $line->date_start, $line->date_end, $line->array_options, $line->fk_unit, '', 0, 0, $line->fk_remise_except);
 				}
@@ -145,17 +141,16 @@
 		}
 		else
 		{
-			if($object->element == 'operationorder') $id_new = $object->cloneObject($user);
-			else {
-				if((float)DOL_VERSION >= 10.0){
-					if ($object->element == 'commande' || $object->element == 'propal' ){
-						$id_new = $object->createFromClone($user, (int)GETPOST('socid'));
-					}else{
-						$id_new = $object->createFromClone($user, $object->id);
-					}
+
+			if((float)DOL_VERSION >= 10.0){
+				if ($object->element == 'commande' || $object->element == 'propal' ){
+					$id_new = $object->createFromClone($user, (int)GETPOST('socid'));
+				}else{
+					$id_new = $object->createFromClone($user, $object->id);
 				}
-				else $id_new = $object->createFromClone((int)GETPOST('socid'));
 			}
+			else $id_new = $object->createFromClone((int)GETPOST('socid'));
+
 
 			if ($id_new > 0)
 			{
@@ -165,23 +160,13 @@
 				$new_object = new $classname($db);
 				$new_object->fetch($id_new);
 				//	var_dump($TMoveLine,$new_object->lines);
-				if($object->element == 'operationorder') {
-					$TNestedToKeep = array();
-					foreach($new_object->lines as $k=>$line) {
-						if(isset($TMoveLine[$k])) {
-							$TNestedToKeep += $line->fetch_all_children_lines(0, true, true);
-							$TNestedToKeep[$line->id] = $line;
-						}
-					}
-				}
+
 				foreach($new_object->lines as $k=>$line) {
 
 					$lineid = empty($line->id) ? $line->rowid : $line->id;
 
 					if(!isset($TMoveLine[$k])) {
 						$json->log[] = "Suppresion ligne $k $lineid";
-						if($object->element != 'operationorder' || ($object->element == 'operationorder' && !array_key_exists($lineid, $TNestedToKeep))) {
-
 							if ($object->element == 'commande' ){
 								// commande
 								$new_object->deleteline($user,$lineid);
@@ -189,7 +174,6 @@
 								//propal || facture
 								$new_object->deleteline($lineid);
 							}
-						}
 					}
 					else{
 						$json->log[] = "ok $k $lineid";

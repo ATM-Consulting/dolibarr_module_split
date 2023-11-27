@@ -1,5 +1,8 @@
 <?php
-class ActionsSplit
+
+require_once __DIR__.'/../backport/v19/core/class/commonhookactions.class.php';
+
+class ActionsSplit extends \split\RetroCompatCommonHookActions
 {
      /** Overloading the doActions function : replacing the parent's function with the one below
       *  @param      parameters  meta datas of the hook (context, etc...)
@@ -18,13 +21,12 @@ class ActionsSplit
 //		var_dump($contexts);exit;
 
 		// TODO make it work on invoices and orders before adding this button
-		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/|| in_array('operationordercard',$contexts)) {
+		if(/*in_array('ordercard',$contexts) ||*/ in_array('propalcard',$contexts) /*|| in_array('invoicecard',$contexts)*/) {
 
-			if ($object->statut == 0 && ($user->rights->{$object->element}->creer || $user->rights->{$object->element}->write)) {
-				$displayButton = true;
-			} else {
-				$displayButton = false;
-			}
+			$rightCreate = function_exists('hasRight') ? $user->hasRight($object->element,'create') : $user->rights->{$object->element}->creer;
+			$rightWrite = function_exists('hasRight') ? $user->hasRight($object->element,'write') : $user->rights->{$object->element}->write;
+
+			$displayButton = ($object->statut == 0 && ($rightCreate || $rightWrite));
 
 			if(GETPOST('actionSplitDelete') == 'ok') {
 				setEventMessage($langs->trans('SplitDeleteOk'));
@@ -39,23 +41,7 @@ class ActionsSplit
                 if (!empty($url)) $url = '- '.$url;
                 setEventMessage($langs->trans('SplitCopyOk', $url));
 			}
-			if(!empty($conf->operationorder) && $conf->operationorder->enabled && $object->element === 'operationorder') {
-				dol_include_once('/operationorder/class/operationorderstatus.class.php');
-                $statusLowerRang = new Operationorderstatus($db);
-                $res = $statusLowerRang->fetchDefault(0, $conf->entity);
-                if ($res<0) {
-                	setEventMessage($statusLowerRang->error, 'errors');
-				}
-				$displayButton = $displayButton || ($statusLowerRang->code === $object->objStatus->code);
-				if (!empty($conf->global->OPODER_STATUS_ON_CLONE)) {
-					$statusFrom = new Operationorderstatus($db);
-					$res = $statusFrom->fetch($conf->global->OPODER_STATUS_ON_CLONE);
-					if ($res<0) {
-						setEventMessage($statusFrom->error, 'errors');
-					}
-					$displayButton =  $displayButton || ($statusFrom->code == $object->objStatus->code);
-				}
-            }
+
         	if ($displayButton) {
 
 				if($object->element=='facture')$idvar = 'facid';
@@ -63,9 +49,6 @@ class ActionsSplit
                 if($object->element == 'propal') {
                     if((float)DOL_VERSION >= 4.0) $fiche = '/comm/propal/card.php';
                     else $fiche = '/comm/propal.php';
-                }
-                else if($object->element == 'operationorder'){
-                    $fiche = '/operationorder/operationorder_card.php';
                 }
                 else if($object->element == 'commande') {
                     if(floatval(DOL_VERSION) >= 3.7) $fiche = '/commande/card.php';
