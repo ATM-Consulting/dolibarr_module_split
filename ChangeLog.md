@@ -3,6 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+- NEW : add min php/dolibarr version  - *30/11/2023* - 2.3.1  
 - NEW : change user->right to hasRight() function - *23/11/2023* - 2.3.0  
         $conf->global to getDolGlobal
         add commonhookActions
