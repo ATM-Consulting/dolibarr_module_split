@@ -64,7 +64,7 @@ class modsplit extends DolibarrModules
 		$this->description = "Description of module split";
 		// Possible values for version are: 'development', 'experimental' or version
 
-		$this->version = '2.3.1';
+		$this->version = '2.4.1';
 
 		// Key used in llx_const table to save module status enabled/disabled
 		// (where MYMODULE is value of property name of module in uppercase)
